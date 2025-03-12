@@ -1,6 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/*
+use o gcc compilador  pff (Tem uma pasta so de testes)
+como usar : 
+gcc nomedoarquivo.c -o caminho do arquivo
+gcc testeAqui.c -o testes/nomedoteste
+*/
 
 /* Constantes */
 #define MAXSIZE 100
@@ -40,143 +46,75 @@ void freeNodes(node* root);
 void readArchive(char maze[MAXSIZE][MAXSIZE], int *rows, int *columns, char *archiveName); 
 
 
+
 int main()
 {
-	//ler modo
+	// Ler modo
 	int modo = 0;
-	// diferente != 
 	while (modo != 4){
-	printf ("qual o modo?");
-	scanf ("%i", &modo);
-	if (modo == 1){
-		
-}
-	
-	if (modo == 2) {
-		
+		printf("Qual o modo? ");
+		scanf("%i", &modo);
 	}
-	
-	if (modo == 3){
-		
-}
 
-	}
-	// MAXSIZE = 100, constante definida no inicio do código
-	const int TAMANHO_X = MAXSIZE; //Placeholder de tamanho 
-	const int TAMANHO_Y = MAXSIZE;
-	
-
-	//tamanho[i][j]
-	char rawMaze[TAMANHO_X][TAMANHO_Y];
-	tile maze[TAMANHO_X][TAMANHO_Y]; //tamanho ??
+	// Criar matriz para armazenar o labirinto
+	char rawMaze[MAXSIZE][MAXSIZE];
+	tile maze[MAXSIZE][MAXSIZE];
 	node start;
-	//determinar posição inicial, em (i j) e criar node
-	for (int i = 0; i < TAMANHO_X; i++)
-	{
-		for (int j = 0; j < TAMANHO_Y; j++)
-		{
-			if(rawMaze[i][j] == '@')
-			{
-				
-				start.pos.i = i;
-				start.pos.j = j;
-				start.parent = NULL;
-			}
-		}
-	}
-	
-	// Solicitar nome do arquivo ao usuário
-	char archiveName[50];
 	int rows, columns;
+	char archiveName[50];
+
+	// Solicitar nome do arquivo ao usuário
 	printf("Digite o nome do arquivo do labirinto: ");
 	scanf("%s", archiveName);
 
 	// Ler o labirinto do arquivo
-	readArchive(rawMaze, &rows, &columns, archiveName);	// Tamanho dinamico
+	readArchive(rawMaze, &rows, &columns, archiveName);
 
+	// Teste: Exibir o labirinto lido
+	printf("\nLabirinto carregado:\n");
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < columns; j++) {
+			printf("%c ", rawMaze[i][j]);
+		}
+		printf("\n");
+	}
 
-	// Podemos substituir a var. TAMANHO_X por rows e TAMANHO_Y por columns (pois o valor de rows e columns é definido na funçao)
-	
-	/* 
-	
-		// Determinar posição final
-	for (int i = 0; i < linhas; i++) {
-		for (int j = 0; j < colunas; j++) {
+	// Determinar posição inicial
+	int startFound = 0;
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < columns; j++) {
+			if (rawMaze[i][j] == '@') {
+				start.pos.i = i;
+				start.pos.j = j;
+				start.parent = NULL;
+				startFound = 1;
+				printf("\nPosição inicial encontrada em: (%d, %d)\n", i, j);
+			}
+		}
+	}
+	if (!startFound) {
+		printf("\nErro: Posição inicial '@' não encontrada!\n");
+	}
+
+	// Determinar posição final
+	int goalFound = 0;
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < columns; j++) {
 			if (rawMaze[i][j] == '$') {
 				maze[i][j].saida = 1;
+				goalFound = 1;
+				printf("\nPosição final encontrada em: (%d, %d)\n", i, j);
 			}
 		}
 	}
-
-	// Traduzir de "char" para "tile"
-	for (int i = 0; i < linhas; i++) {
-		for (int j = 0; j < colunas; j++) {
-			// Inserir função para traduzir char para tile
-		}
+	if (!goalFound) {
+		printf("\nErro: Posição final '$' não encontrada!\n");
 	}
 
-	// Ler os espaços ao redor da posição inicial
-	if (start != NULL) {
-		readNode(*start, maze, linhas, colunas);
-		freeNodes(start);
-	}
-
-	para usar essa condicional eu acho que temos que adicionar a seguinte linha :
-	
-	
-	// Determinar posição inicial
-	for (int i = 0; i < linhas; i++) {
-		for (int j = 0; j < colunas; j++) {
-			if (rawMaze[i][j] == '@') {
-				start = makeNode(NULL, i, j);
-			}
-		}
-	}
-
-	
-	*/
-	//determinar posição final
-	for (int i = 0 ; i < TAMANHO_X; i++){
-	for (int j = 0; j < TAMANHO_Y; j++){
-		if (rawMaze[i][j] == '$') {
-			maze[i][j].saida = 1;
-			}
-			
-	}
-	}
-	//traduzir de "char" pra "tile"
-	for (int i = 0; i < TAMANHO_X; i++)
-	{
-		for (int j = 0; j < TAMANHO_Y; j++)
-		{
-			//Inserir função q traduz char pra algum tile aí, e diz sua posição em (i, j)
-		}
-	}
-
-	//ler os espaços que tem em volta da node start;
-
-
-	//caso espaço seja andável, criar node nele;
-	//repete para todos os nodes
-	readNode(start, maze, TAMANHO_X, TAMANHO_Y);
-	//caso posição do node seja igual à posição final, considere node "completo"
-	//array com nodes completas?
-	
-	//caso len(array) = 0, considere inimigos como não sendo paredes
-	//caso len(array) = 0 de novo, não há solução :(
-	
-	//conte quantos inimigos tem nos caminhos e escolha os que tem menos (menor igual ao menor)
-	
-	//conte o tamanho dos caminhos válidos, e escolha o menor
-	//pegue posição de cada node relacionada a node escolhida e substitua por caracteres apropriados
-	
-	//se modo for 1, escolha se perde; mostre na tela
-	//se for modo 2, ignore; mostre na tela
-	
-	//se modo 4, return 0;
-	//se modo 3 salve a solução em um arquivo;
-	
+	return 0;
 }
+
+
 
 node makeNode(node pai, int i, int j)
 {
@@ -253,7 +191,7 @@ void readArchive(char maze[MAXSIZE][MAXSIZE], int *rows, int *columns, char *arc
 	FILE *archive = fopen(archiveName,"r");  
 	if(archive == NULL){
 		printf("Erro ao abrir o arquivo!\n");
-		exit(1);
+        exit(1);
 	}
 
 	fscanf(archive, "%d %d", rows, columns);
