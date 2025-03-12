@@ -12,6 +12,7 @@ struct node
 {
 	point pos;
 	struct node* parent;
+	int complete;
 };
 typedef struct
 {
@@ -27,9 +28,9 @@ typedef struct
 	point pos;
 } tile;
 
-node gerarNode(node pai, int i, int j);
+node makeNode(node pai, int i, int j);
 
-void readNode(node nodulo, tile maze[100][100], int maxI, int maxJ);
+node* readNode(node nodulo, tile maze[100][100], int maxI, int maxJ);
 
 
 int main()
@@ -98,7 +99,6 @@ int main()
 	//caso espaço seja andável, criar node nele;
 	//repete para todos os nodes
 	readNode(start, maze, TAMANHO_X, TAMANHO_Y);
-
 	//caso posição do node seja igual à posição final, considere node "completo"
 	//array com nodes completas?
 	
@@ -118,25 +118,32 @@ int main()
 	
 }
 
-node gerarNode(node pai, int i, int j)
+node makeNode(node pai, int i, int j)
 {
 	node newNode;
 	newNode.parent = &pai;
 	newNode.pos.i = i;
 	newNode.pos.j = j;
+	newNode.complete = 0;
 	return newNode;
 }
 
-void readNodes(node nodulo, tile** maze, int maxI, int maxJ, int inimigos)
+node* readNodes(node nodulo, tile** maze, int maxI, int maxJ, int inimigos)
 {
-	int andou = 0;
+	int flag = 0;
+	if(maze[nodulo.pos.i][nodulo.pos.j].saida == 1)
+	{
+		nodulo.complete = 1;
+		return &nodulo;
+	}
+	
 	if(nodulo.pos.i + 1 < maxI)
 	{
 		if (maze[nodulo.pos.i + 1][nodulo.pos.j].chao || (inimigos && maze[nodulo.pos.i + 1][nodulo.pos.j].inimigo))
 		{
 			maze[nodulo.pos.i + 1][nodulo.pos.j].chao = 0;
-			readNodes(gerarNode(nodulo, nodulo.pos.i + 1, nodulo.pos.j), maze, maxI, maxJ, inimigos);
-			andou++;
+			readNodes(makeNode(nodulo, nodulo.pos.i + 1, nodulo.pos.j), maze, maxI, maxJ, inimigos);
+			flag++;
 		}
 	}
 	if(nodulo.pos.i - 1 > 0)
@@ -144,8 +151,8 @@ void readNodes(node nodulo, tile** maze, int maxI, int maxJ, int inimigos)
 				if (maze[nodulo.pos.i - 1][nodulo.pos.j].chao || (inimigos && maze[nodulo.pos.i - 1][nodulo.pos.j].inimigo))
 		{
 			maze[nodulo.pos.i + 1][nodulo.pos.j].chao = 0;
-			readNodes(gerarNode(nodulo, nodulo.pos.i - 1, nodulo.pos.j), maze, maxI, maxJ, inimigos);
-			andou++;
+			readNodes(makeNode(nodulo, nodulo.pos.i - 1, nodulo.pos.j), maze, maxI, maxJ, inimigos);
+			flag++;
 		}
 	}
 
@@ -154,8 +161,8 @@ void readNodes(node nodulo, tile** maze, int maxI, int maxJ, int inimigos)
 		if (maze[nodulo.pos.i][nodulo.pos.j + 1].chao || (inimigos && maze[nodulo.pos.i][nodulo.pos.j + 1].inimigo))
 		{
 			maze[nodulo.pos.i][nodulo.pos.j + 1].chao = 0;
-			readNodes(gerarNode(nodulo, nodulo.pos.i, nodulo.pos.j + 1), maze, maxI, maxJ, inimigos);
-			andou++;
+			readNodes(makeNode(nodulo, nodulo.pos.i, nodulo.pos.j + 1), maze, maxI, maxJ, inimigos);
+			flag++;
 		}
 	}
 	if(nodulo.pos.j - 1 > 0)
@@ -163,9 +170,12 @@ void readNodes(node nodulo, tile** maze, int maxI, int maxJ, int inimigos)
 		if (maze[nodulo.pos.i][nodulo.pos.j -1].chao || (inimigos && maze[nodulo.pos.i][nodulo.pos.j - 1].inimigo))
 		{
 			maze[nodulo.pos.i][nodulo.pos.j - 1].chao = 0;
-			readNodes(gerarNode(nodulo, nodulo.pos.i, nodulo.pos.j - 1), maze, maxI, maxJ, inimigos);
-			andou++;
+			readNodes(makeNode(nodulo, nodulo.pos.i, nodulo.pos.j - 1), maze, maxI, maxJ, inimigos);
+			flag++;
 		}
 	}
-	//se andou = 0; fim dessa "familia"
+	if (flag == 0)
+	{
+		return &nodulo;
+	}
 }
