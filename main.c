@@ -11,7 +11,7 @@ typedef struct node node;
 struct node
 {
 	point pos;
-	struct node* origin;
+	struct node* parent;
 };
 typedef struct
 {
@@ -23,6 +23,7 @@ typedef struct
 	int morreu;
 	int matou;
 	int vitoria;
+	int saida;
 	point pos;
 } tile;
 
@@ -42,7 +43,7 @@ int main()
 	if (modo == 1){
 		
 }
-	}
+	
 	if (modo == 2) {
 		
 	}
@@ -70,16 +71,16 @@ int main()
 				
 				start.pos.i = i;
 				start.pos.j = j;
-				start.origin = NULL;
+				start.parent = NULL;
 			}
 		}
 	}
 		//determinar posição final
 	
-	for (int a = 0 ; a < alt; a ++){
-	for (int b = 0; b < larg; b++){
-		if (labirinto[a][b] == "$") {
-			tile caminho[a][b].chegada = 1;
+	for (int i = 0 ; i < TAMANHO_X; i++){
+	for (int j = 0; j < TAMANHO_Y; j++){
+		if (rawMaze[i][j] == '$') {
+			maze[i][j].saida = 1;
 			}
 			
 	}
@@ -120,7 +121,7 @@ int main()
 node gerarNode(node pai, int i, int j)
 {
 	node newNode;
-	newNode.origin = &pai;
+	newNode.parent = &pai;
 	newNode.pos.i = i;
 	newNode.pos.j = j;
 	return newNode;
