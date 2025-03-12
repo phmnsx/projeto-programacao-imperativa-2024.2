@@ -34,6 +34,24 @@ void readNode(node nodulo, tile maze[100][100], int maxI, int maxJ);
 int main()
 {
 	//ler modo
+	int modo = 0;
+	
+	while (modo /= 4){
+	printf ("qual o modo?");
+	scanf ("%i", &modo);
+	if (modo == 1){
+		
+}
+	}
+	if (modo == 2) {
+		
+	}
+	
+	if (modo == 3){
+		
+}
+
+	}
 	const int TAMANHO_X = 100; //Placeholder de tamanho
 	const int TAMANHO_Y = 100;
 
@@ -55,6 +73,16 @@ int main()
 				start.origin = NULL;
 			}
 		}
+	}
+		//determinar posição final
+	
+	for (int a = 0 ; a < alt; a ++){
+	for (int b = 0; b < larg; b++){
+		if (labirinto[a][b] == "$") {
+			tile caminho[a][b].chegada = 1;
+			}
+			
+	}
 	}
 	//traduzir de "char" pra "tile"
 	for (int i = 0; i < TAMANHO_X; i++)
