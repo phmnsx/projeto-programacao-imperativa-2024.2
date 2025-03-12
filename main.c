@@ -17,7 +17,12 @@ struct node
 {
 	point pos;
 	struct node* parent;
-	int complete;
+	int state; // -1 = não andável
+			   // 0 = não andada,
+			   // 1 = andada
+			   // 2 = faz parte da solução
+			   // 3 = início
+			   // 4 = final
 };
 typedef struct
 {
@@ -34,9 +39,8 @@ typedef struct
 } tile;
 
 /* Funçoes */
-node makeNode(node pai, int i, int j);
-node* readNode(node nodulo, tile maze[100][100], int maxI, int maxJ);
-void freeNodes(node* root);
+node makeNode(node* pai, int i, int j);
+//void freeNodes(node* root);
 void readArchive(char maze[MAXSIZE][MAXSIZE], int *rows, int *columns, char *archiveName); 
 
 
@@ -69,21 +73,8 @@ int main()
 	//tamanho[i][j]
 	char rawMaze[TAMANHO_X][TAMANHO_Y];
 	tile maze[TAMANHO_X][TAMANHO_Y]; //tamanho ??
-	node start;
-	//determinar posição inicial, em (i j) e criar node
-	for (int i = 0; i < TAMANHO_X; i++)
-	{
-		for (int j = 0; j < TAMANHO_Y; j++)
-		{
-			if(rawMaze[i][j] == '@')
-			{
-				
-				start.pos.i = i;
-				start.pos.j = j;
-				start.parent = NULL;
-			}
-		}
-	}
+	point start;
+	point end;
 	
 	// Solicitar nome do arquivo ao usuário
 	char archiveName[50];
@@ -98,16 +89,6 @@ int main()
 	// Podemos substituir a var. TAMANHO_X por rows e TAMANHO_Y por columns (pois o valor de rows e columns é definido na funçao)
 	
 	/* 
-	
-		// Determinar posição final
-	for (int i = 0; i < linhas; i++) {
-		for (int j = 0; j < colunas; j++) {
-			if (rawMaze[i][j] == '$') {
-				maze[i][j].saida = 1;
-			}
-		}
-	}
-
 	// Traduzir de "char" para "tile"
 	for (int i = 0; i < linhas; i++) {
 		for (int j = 0; j < colunas; j++) {
@@ -122,19 +103,19 @@ int main()
 	}
 
 	para usar essa condicional eu acho que temos que adicionar a seguinte linha :
-	
+	*/ 
 	
 	// Determinar posição inicial
-	for (int i = 0; i < linhas; i++) {
-		for (int j = 0; j < colunas; j++) {
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < columns; j++) {
 			if (rawMaze[i][j] == '@') {
-				start = makeNode(NULL, i, j);
+				
 			}
 		}
 	}
 
 	
-	*/
+	
 	//determinar posição final
 	for (int i = 0 ; i < TAMANHO_X; i++){
 	for (int j = 0; j < TAMANHO_Y; j++){
@@ -149,16 +130,61 @@ int main()
 	{
 		for (int j = 0; j < TAMANHO_Y; j++)
 		{
-			//Inserir função q traduz char pra algum tile aí, e diz sua posição em (i, j)
+			//Inserir função q traduz char pra algum tile aí, e diz sua posição em (i, j)   ; será q precisa?
 		}
 	}
+	node array[rows][columns]; // i j, então rows columns
+	node tmp_array[rows][columns];
+	//criar nodes, e "ativar" a no start
+	for (int i = 0; i<rows; i++)
+	{
+		for (int j = 0; j < columns; j++)
+		{
+			array[i][j] = makeNode(NULL, i, j); //crie uma node [i][j] andável
+			if (!maze[i][j].chao) //caso não seja chão
+			{
+				array[i][j].state = -1; //faça ser não andável
+			}
 
-	//ler os espaços que tem em volta da node start;
-
-
+			if ((i == start.i) && (j == start.j))
+			{
+				array[i][j].state = 3; // node inicio
+			}
+		}
+	}
+	arraycpy(tmp_array, array); //criar função q (copia, copiado)
+								//recebe pointer de array e tamanhos?
+								
 	//caso espaço seja andável, criar node nele;
 	//repete para todos os nodes
-	readNode(start, maze, TAMANHO_X, TAMANHO_Y);
+	int endReached = 0;
+	while(endReached == 0)
+	{
+	for (int i = 0; i < rows ; i++)
+	{
+		for (int j = 0 ; i < columns; j++)
+		{
+			if ((array[i][j].state == 3) || (array[i][j].state == 1)) // Se for inicio ou andado
+			{
+				for ( k = -1; k <= -1 ; k+2)
+				{
+					if (array[i + k][j].state == 0) // Se for andável
+					{
+						tmp_array[i + k][j].state = 1;
+						tmp_array[i + k][j].parent = &array[i][j];
+					}
+					if (array[i][j + k].state == 0) // Se for andável
+					{
+						tmp_array[i][j + k].state = 1;
+						tmp_array[i][j + k].parent = &array[i][j]; // endereço certo ??
+					}
+				}
+			}
+		}
+	}
+	arraycpy(array, tmp_array); // atualiza array pra ser tmp_array
+	endReached = isEndReached(array);
+	}
 	//caso posição do node seja igual à posição final, considere node "completo"
 	//array com nodes completas?
 	
@@ -178,75 +204,25 @@ int main()
 	
 }
 
-node makeNode(node pai, int i, int j)
+node makeNode(node *pai, int i, int j)
 {
 	node newNode;
-	newNode.parent = &pai;
+	newNode.parent = pai;
 	newNode.pos.i = i;
 	newNode.pos.j = j;
-	newNode.complete = 0;
+	newNode.state = 0;
 	return newNode;
 }
 
-node* readNodes(node nodulo, tile** maze, int maxI, int maxJ, int inimigos)
-{
-	int flag = 0;
-	if(maze[nodulo.pos.i][nodulo.pos.j].saida == 1)
-	{
-		nodulo.complete = 1;
-		return &nodulo;
-	}
-	
-	if(nodulo.pos.i + 1 < maxI)
-	{
-		if (maze[nodulo.pos.i + 1][nodulo.pos.j].chao || (inimigos && maze[nodulo.pos.i + 1][nodulo.pos.j].inimigo))
-		{
-			maze[nodulo.pos.i + 1][nodulo.pos.j].chao = 0;
-			readNodes(makeNode(nodulo, nodulo.pos.i + 1, nodulo.pos.j), maze, maxI, maxJ, inimigos);
-			flag++;
-		}
-	}
-	if(nodulo.pos.i - 1 > 0)
-	{
-				if (maze[nodulo.pos.i - 1][nodulo.pos.j].chao || (inimigos && maze[nodulo.pos.i - 1][nodulo.pos.j].inimigo))
-		{
-			maze[nodulo.pos.i + 1][nodulo.pos.j].chao = 0;
-			readNodes(makeNode(nodulo, nodulo.pos.i - 1, nodulo.pos.j), maze, maxI, maxJ, inimigos);
-			flag++;
-		}
-	}
-
-	if(nodulo.pos.j + 1 < maxJ)
-	{
-		if (maze[nodulo.pos.i][nodulo.pos.j + 1].chao || (inimigos && maze[nodulo.pos.i][nodulo.pos.j + 1].inimigo))
-		{
-			maze[nodulo.pos.i][nodulo.pos.j + 1].chao = 0;
-			readNodes(makeNode(nodulo, nodulo.pos.i, nodulo.pos.j + 1), maze, maxI, maxJ, inimigos);
-			flag++;
-		}
-	}
-	if(nodulo.pos.j - 1 > 0)
-	{
-		if (maze[nodulo.pos.i][nodulo.pos.j -1].chao || (inimigos && maze[nodulo.pos.i][nodulo.pos.j - 1].inimigo))
-		{
-			maze[nodulo.pos.i][nodulo.pos.j - 1].chao = 0;
-			readNodes(makeNode(nodulo, nodulo.pos.i, nodulo.pos.j - 1), maze, maxI, maxJ, inimigos);
-			flag++;
-		}
-	}
-	if (flag == 0)
-	{
-		return &nodulo;
-	}
-}
-
 // ver nos comentarios da linha 126
+//Não usaremos as funções malloc() e free().
+/*
 void freeNodes(node* root) {
 	if (root != NULL) {
 		freeNodes(root->parent);
 		free(root);
 	}
-}
+}*/
 
 
 void readArchive(char maze[MAXSIZE][MAXSIZE], int *rows, int *columns, char *archiveName){
