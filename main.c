@@ -100,13 +100,14 @@ node gerarNode(node pai, int i, int j)
 
 void readNodes(node nodulo, tile** maze, int maxI, int maxJ, int inimigos)
 {
-
+	int andou = 0;
 	if(nodulo.pos.i + 1 < maxI)
 	{
 		if (maze[nodulo.pos.i + 1][nodulo.pos.j].chao || (inimigos && maze[nodulo.pos.i + 1][nodulo.pos.j].inimigo))
 		{
 			maze[nodulo.pos.i + 1][nodulo.pos.j].chao = 0;
 			readNodes(gerarNode(nodulo, nodulo.pos.i + 1, nodulo.pos.j), maze, maxI, maxJ, inimigos);
+			andou++;
 		}
 	}
 	if(nodulo.pos.i - 1 > 0)
@@ -115,6 +116,7 @@ void readNodes(node nodulo, tile** maze, int maxI, int maxJ, int inimigos)
 		{
 			maze[nodulo.pos.i + 1][nodulo.pos.j].chao = 0;
 			readNodes(gerarNode(nodulo, nodulo.pos.i - 1, nodulo.pos.j), maze, maxI, maxJ, inimigos);
+			andou++;
 		}
 	}
 
@@ -124,6 +126,7 @@ void readNodes(node nodulo, tile** maze, int maxI, int maxJ, int inimigos)
 		{
 			maze[nodulo.pos.i][nodulo.pos.j + 1].chao = 0;
 			readNodes(gerarNode(nodulo, nodulo.pos.i, nodulo.pos.j + 1), maze, maxI, maxJ, inimigos);
+			andou++;
 		}
 	}
 	if(nodulo.pos.j - 1 > 0)
@@ -132,6 +135,8 @@ void readNodes(node nodulo, tile** maze, int maxI, int maxJ, int inimigos)
 		{
 			maze[nodulo.pos.i][nodulo.pos.j - 1].chao = 0;
 			readNodes(gerarNode(nodulo, nodulo.pos.i, nodulo.pos.j - 1), maze, maxI, maxJ, inimigos);
+			andou++;
 		}
 	}
+	//se andou = 0; fim dessa "familia"
 }
