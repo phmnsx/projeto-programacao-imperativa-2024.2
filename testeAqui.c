@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /*
 use o gcc compilador  pff (Tem uma pasta so de testes)
@@ -41,9 +42,10 @@ typedef struct
 
 /* Funçoes */
 node makeNode(node pai, int i, int j);
-node* readNode(node nodulo, tile maze[100][100], int maxI, int maxJ);
+node* readNode(node nodulo, tile maze[MAXSIZE][MAXSIZE], int maxI, int maxJ);
 void freeNodes(node* root);
-void readArchive(char maze[MAXSIZE][MAXSIZE], int *rows, int *columns, char *archiveName); 
+void readArchive(char maze[MAXSIZE][MAXSIZE], int *rows, int *columns, char *archiveName);
+void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE]);
 
 
 
@@ -208,3 +210,40 @@ void readArchive(char maze[MAXSIZE][MAXSIZE], int *rows, int *columns, char *arc
 	fclose(archive);
 
 }
+void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte[MAXSIZE][MAXSIZE]){
+	for (int i =0; i< MAXSIZE; i++){
+	for (int j = 0; j <MAXSIZE; j++){
+		if (maze[i][j] == '#'){ 
+			parte[i][j].parede = 1;
+		}
+		if (maze[i][j] == '.'){ 
+			parte[i][j].chao = 1 ;
+		}
+		if (maze[i][j] == '%'){ 
+			parte[i][j].inimigo = 1;
+		}
+		if (maze[i][j] == '$'){ 
+			parte[i][j].chegada = 1;
+	}
+		if (maze[i][j] == '*'){ 
+			parte[i][j].andou = 1;
+	}
+		if (maze[i][j] == '+'){
+			parte[i][j].morreu = 1;
+	}
+		if (maze[i][j] == '!'){
+			parte[i][j].matou = 1;
+	}
+		if (maze[i][j] == '$'){
+			parte[i][j].saida = 1 ;
+	}
+		if (maze[i][j] == 'v'){
+			parte[i][j].vitoria=1 ;
+	}
+}
+}
+}
+
+
+
+

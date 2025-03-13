@@ -3,7 +3,7 @@
 
 
 /* Constantes */
-#define MAXSIZE 100
+#define MAXSIZE 20
 
 /*  Strutcts  */
 typedef struct 
@@ -53,6 +53,7 @@ void solveMaze (point pathArray[1000], node array[MAXSIZE][MAXSIZE], int rows, i
 																														  
 void readArchive(char maze[MAXSIZE][MAXSIZE], int *rows, int *columns, char *archiveName); 							  
 point getPoint(node currentNode, int ger); // função auxiliar pra a "lista" de parents de um node (vc não vai usar)
+void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE]); // função que transforma todos os chars do labirinto em tiles
 
 int main()
 {
@@ -332,4 +333,38 @@ point getPoint(node currentNode, int ger)
 	{
 		return getPoint(*currentNode.parent, ger - 1);
 	}
+}
+
+void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte[MAXSIZE][MAXSIZE]){
+	for (int i =0; i< MAXSIZE; i++){
+	for (int j = 0; j <MAXSIZE; j++){
+		if (maze[i][j] == '#'){ 
+			parte[i][j].parede = 1;
+		}
+		if (maze[i][j] == '.'){ 
+			parte[i][j].chao = 1 ;
+		}
+		if (maze[i][j] == '%'){ 
+			parte[i][j].inimigo = 1;
+		}
+		if (maze[i][j] == '$'){ 
+			parte[i][j].chegada = 1;
+	}
+		if (maze[i][j] == '*'){ 
+			parte[i][j].andou = 1;
+	}
+		if (maze[i][j] == '+'){
+			parte[i][j].morreu = 1;
+	}
+		if (maze[i][j] == '!'){
+			parte[i][j].matou = 1;
+	}
+		if (maze[i][j] == '$'){
+			parte[i][j].saida = 1 ;
+	}
+		if (maze[i][j] == 'v'){
+			parte[i][j].vitoria=1 ;
+	}
+}
+}
 }
