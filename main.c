@@ -134,33 +134,18 @@ int main()
 			tmp_array[i][j] = makeNode(NULL, -1, -1);
 		}
 	}
-	for (int i = 0; i < rows; i++)
-	{
-		for (int j = 0; j < columns ; j++)
-		{
-			printf("(%d %d) ", array[i][j].pos.i, array[i][j].pos.j);
-		}
-		printf("\n");
-	}
 
 	arraycpy(tmp_array, array, rows, columns); //criar função q (cópia, copiado)
 								//recebe pointer de array e tamanhos?
-	for (int i = 0; i < rows; i++)
-	{
-		for (int j = 0; j < columns ; j++)
-		{
-			printf("(%d %d) ", array[i][j].pos.i, array[i][j].pos.j);
-		}
-		printf("\n");
-	}
+
+
 	//caso espaço seja andável, criar node nele;
 	//repete para todos os nodes
 	point pathArr[400];
 	int inimigos = 0;
 	
-	//função de (tile maze[][] -> node array[][]) !! 
 	
-	//solveMaze(pathArr, array, rows, columns, inimigos , end); //guarda resultado nessa array, de: array desses nodes, desse tamanho, e se ignora inimigos. e o end tb
+	solveMaze(pathArr, array, rows, columns, inimigos , end); //guarda resultado nessa array, de: array desses nodes, desse tamanho, e se ignora inimigos. e o end tb
 	
 	//caso posição do node seja igual à posição final, considere node "completo"
 	//array com nodes completas?
