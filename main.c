@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "functions.c"
 
 /* Constantes */
 #define MAXSIZE 20
@@ -28,6 +28,7 @@ struct node
 };
 typedef struct
 {
+	int inicio;
 	int parede;
 	int chao;
 	int inimigo;
@@ -44,7 +45,7 @@ typedef struct
 node makeNode(node* pai, int i, int j); //cria node com esse parent nessa posição
 void arraycpy(node copy[MAXSIZE][MAXSIZE], node original[MAXSIZE][MAXSIZE], int rows, int columns); //acho q funciona!!!! // copia de original pra copy, com essas dimensões (não retorno) (algm testa dps pfv)
 
-void solveMaze (point pathArray[1000], node array[MAXSIZE][MAXSIZE], int rows, int columns, int inimigosBool, point end); // solveMaze resolve o labirinto e guarda o caminho em "PathArray", não sei fazer
+void solveMaze (point pathArray[400], node array[MAXSIZE][MAXSIZE], int rows, int columns, int inimigosBool, point end); // solveMaze resolve o labirinto e guarda o caminho em "PathArray", não sei fazer
 																														  // tamanho dinâmico e recomendo q vc coloque esse msm tamanho aí na array q vc quer a
 																														  // resposta qnd for usar. pathArray [point inicio .... point final, NULLPOINT]
 																														  // NULLPOINT é (-1, -1) pq não tem esse espaço uma array ent da pra vc sempre falar
@@ -53,7 +54,11 @@ void solveMaze (point pathArray[1000], node array[MAXSIZE][MAXSIZE], int rows, i
 																														  
 void readArchive(char maze[MAXSIZE][MAXSIZE], int *rows, int *columns, char *archiveName); 							  
 point getPoint(node currentNode, int ger); // função auxiliar pra a "lista" de parents de um node (vc não vai usar)
+<<<<<<< Updated upstream
 void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE]); // função que transforma todos os chars do labirinto em tiles
+=======
+void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], point* start, point* end, int rows, int columns); // função que transforma todos os chars do labirinto em tiles   ; adicionado: pointer do ponto inicio e saída : )
+>>>>>>> Stashed changes
 
 int main()
 {
@@ -61,118 +66,93 @@ int main()
 	int modo = 0;
 	// diferente != 
 	while (modo != 4){
-	printf ("qual o modo?");
+	printf ("qual o modo?\n"); //da flush no terminal
 	scanf ("%i", &modo);
 	if (modo == 1){
 		
-}
+		void solveMaze (point pathArray[400], node array[MAXSIZE][MAXSIZE], int rows, int columns, int inimigosBool, point end);
+	}
 	
 	if (modo == 2) {
+		
 		
 	}
 	
 	if (modo == 3){
 		
-}
-
 	}
-	// MAXSIZE = 100, constante definida no inicio do código
-	const int TAMANHO_X = MAXSIZE; //Placeholder de tamanho 
-	const int TAMANHO_Y = MAXSIZE;
+
+
+
+	if (modo == 4){
+			//return 0;
+	}
 	
 
 	//tamanho[i][j]
-	char rawMaze[TAMANHO_X][TAMANHO_Y];
-	tile maze[TAMANHO_X][TAMANHO_Y]; //tamanho ??
-	point start;
-	point end;
+	char rawMaze[MAXSIZE][MAXSIZE];
+	tile maze[MAXSIZE][MAXSIZE];
+	point start;					
+	point end;						
 	
 	// Solicitar nome do arquivo ao usuário
 	char archiveName[50];
 	int rows, columns;
-	printf("Digite o nome do arquivo do labirinto: ");
+	printf("Digite o nome do arquivo do labirinto:\n");
 	scanf("%s", archiveName);
 
 	// Ler o labirinto do arquivo
 	readArchive(rawMaze, &rows, &columns, archiveName);	// Tamanho dinamico
 
-
-	// Podemos substituir a var. TAMANHO_X por rows e TAMANHO_Y por columns (pois o valor de rows e columns é definido na funçao)
+	// Traduzir de "char" para "tile" e definir start e end 
+	charToTile(rawMaze, maze, &start, &end, rows, columns);
 	
-	/* 
-	// Traduzir de "char" para "tile"
-	for (int i = 0; i < linhas; i++) {
-		for (int j = 0; j < colunas; j++) {
-			// Inserir função para traduzir char para tile
-		}
-	}
-
-	// Ler os espaços ao redor da posição inicial
-	if (start != NULL) {
-		readNode(*start, maze, linhas, colunas);
-		freeNodes(start);
-	}
-
-	para usar essa condicional eu acho que temos que adicionar a seguinte linha :
-	*/ 
-	
-	// Determinar posição inicial
-	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < columns; j++) {
-			if (rawMaze[i][j] == '@') {
-				
-			}
-		}
-	}
-
-	
-	
-	//determinar posição final
-	for (int i = 0 ; i < TAMANHO_X; i++){
-	for (int j = 0; j < TAMANHO_Y; j++){
-		if (rawMaze[i][j] == '$') {
-			maze[i][j].saida = 1;
-			}
-			
-	}
-	}
-	//traduzir de "char" pra "tile"
-	for (int i = 0; i < TAMANHO_X; i++)
-	{
-		for (int j = 0; j < TAMANHO_Y; j++)
-		{
-			//Inserir função q traduz char pra algum tile aí, e diz sua posição em (i, j)   ; será q precisa?
-		}
-	}
 	node array[rows][columns]; // i j, então rows columns
 	node tmp_array[rows][columns];
+	
 	//criar nodes, e "ativar" a no start
-	for (int i = 0; i<rows; i++)
+	for (int i = 0; i < rows; i++)
 	{
 		for (int j = 0; j < columns; j++)
 		{
 			array[i][j] = makeNode(NULL, i, j); //crie uma node [i][j] andável
 			if (!maze[i][j].chao) //caso não seja chão
 			{
-				array[i][j].state = -1; //faça ser não andável
+				array[i][j].state = -1;//faça ser não andável
 			}
 
 			if ((i == start.i) && (j == start.j))
 			{
-				array[i][j].state = 3; // node inicio
+				array[i][j].state = 3; // node inicio   
 			}
+		}
+	}
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < columns ; j++)
+		{
+			tmp_array[i][j] = makeNode(NULL, -1, -1);
 		}
 	}
 	arraycpy(tmp_array, array, rows, columns); //criar função q (cópia, copiado)
 								//recebe pointer de array e tamanhos?
-								
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < columns ; j++)
+		{
+			printf("(%d %d) ", tmp_array[i][j].pos.i, tmp_array[i][j].pos.j);
+		}
+		printf("\n");
+	}
 	//caso espaço seja andável, criar node nele;
 	//repete para todos os nodes
-	point pathArr[100];
+	point pathArr[400];
 	int inimigos = 0;
+	
+	//função de (tile maze[][] -> node array[][]) !! 
+	
 	solveMaze(pathArr, array, rows, columns, inimigos , end); //guarda resultado nessa array, de: array desses nodes, desse tamanho, e se ignora inimigos. e o end tb
 	
-
 	//caso posição do node seja igual à posição final, considere node "completo"
 	//array com nodes completas?
 	
@@ -191,6 +171,8 @@ int main()
 	//se modo 3 salve a solução em um arquivo;
 	
 }
+} 
+
 
 node makeNode(node *pai, int i, int j)
 {
@@ -202,22 +184,11 @@ node makeNode(node *pai, int i, int j)
 	return newNode;
 }
 
-// ver nos comentarios da linha 126
-//Não usaremos as funções malloc() e free().
-/*
-void freeNodes(node* root) {
-	if (root != NULL) {
-		freeNodes(root->parent);
-		free(root);
-	}
-}*/
-
-
 void readArchive(char maze[MAXSIZE][MAXSIZE], int *rows, int *columns, char *archiveName){
 	FILE *archive = fopen(archiveName,"r");  
 	if(archive == NULL){
 		printf("Erro ao abrir o arquivo!\n");
-		exit(1);
+        exit(1);
 	}
 
 	fscanf(archive, "%d %d", rows, columns);
@@ -235,6 +206,7 @@ void readArchive(char maze[MAXSIZE][MAXSIZE], int *rows, int *columns, char *arc
 
 }
 
+
 void arraycpy(node copy[MAXSIZE][MAXSIZE], node original[MAXSIZE][MAXSIZE], int rows, int columns)
 {
 	for (int i = 0; i < rows; i++)
@@ -246,13 +218,14 @@ void arraycpy(node copy[MAXSIZE][MAXSIZE], node original[MAXSIZE][MAXSIZE], int 
 	}
 }
 
-void solveMaze(point pathArray[1000], node array[MAXSIZE][MAXSIZE], int rows, int columns, int inimigosBool, point end)
+
+void solveMaze(point pathArray[400], node array[MAXSIZE][MAXSIZE], int rows, int columns, int inimigosBool, point end)
 {
 	point NULLPOINT;
 	NULLPOINT.i = -1;
 	NULLPOINT.j = -1;
 	
-	point tmp_pathArray[1000];
+	point tmp_pathArray[400];
 	node tmp_array[rows][columns];
 	node endNode = makeNode(NULL, -1, -1);
 	int flag;
@@ -262,7 +235,7 @@ void solveMaze(point pathArray[1000], node array[MAXSIZE][MAXSIZE], int rows, in
 		flag = 0;
 		for (int i = 0; i < rows; i++)
 		{
-			for (int j = 0 ; i < columns; j++)
+			for (int j = 0 ; j < columns; j++)
 			{
 				if (array[i][j].state == 4)
 				{
@@ -270,15 +243,16 @@ void solveMaze(point pathArray[1000], node array[MAXSIZE][MAXSIZE], int rows, in
 				}
 				if ((array[i][j].state == 3) || (array[i][j].state == 1) || (array[i][j].state == 6)) // Se for inicio ou andado ou inimigo andado
 				{
-					for (int k = -1; k <= -1 ; k = k + 2)
+					for (int k = -1; k < 2 ; k = k + 2)
 					{
-						if (array[i + k][j].state == 0 || (inimigosBool && array[i + k][j].state == 5)) // Se for andável
+						if ((array[i + k][j].state == 0) || (inimigosBool && (array[i + k][j].state == 5))) // Se for andável
 						{
+							printf("%d %d", array[i][j].pos.i, array[i][j].pos.j);
 							tmp_array[i + k][j].state = 1;
 							tmp_array[i + k][j].parent = &array[i][j];
 							flag++;	
 						}
-						if (array[i][j + k].state == 0 || (inimigosBool && array[i][j + k].state == 5)) // Se for andável
+						if ((array[i][j + k].state == 0) || (inimigosBool && (array[i][j + k].state == 5))) // Se for andável
 						{
 							tmp_array[i][j + k].state = 1;
 							tmp_array[i][j + k].parent = &array[i][j]; // endereço certo ??
@@ -297,7 +271,7 @@ void solveMaze(point pathArray[1000], node array[MAXSIZE][MAXSIZE], int rows, in
 		}
 	}
 	int size;
-	for(size = 0; size < 1000; size++)
+	for(size = 0; size < 400; size++)
 	{
 		pathArray[size] = getPoint(endNode, size);
 		if ((pathArray[size].i == NULLPOINT.i) && (pathArray[size].j == NULLPOINT.j))
@@ -335,9 +309,20 @@ point getPoint(node currentNode, int ger)
 	}
 }
 
+<<<<<<< Updated upstream
 void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte[MAXSIZE][MAXSIZE]){
 	for (int i =0; i< MAXSIZE; i++){
 	for (int j = 0; j <MAXSIZE; j++){
+=======
+void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], point* start, point* end, int rows, int columns){
+	for (int i =0; i< rows; i++){
+	for (int j = 0; j < columns; j++){
+		if (maze[i][j] == '@'){
+			parte[i][j].inicio = 1;
+			start->i = i;
+			start->j = j;
+		}
+>>>>>>> Stashed changes
 		if (maze[i][j] == '#'){ 
 			parte[i][j].parede = 1;
 		}
@@ -347,6 +332,7 @@ void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte[MAXSIZE][MAXSIZE]){
 		if (maze[i][j] == '%'){ 
 			parte[i][j].inimigo = 1;
 		}
+<<<<<<< Updated upstream
 		if (maze[i][j] == '$'){ 
 			parte[i][j].chegada = 1;
 	}
@@ -362,9 +348,31 @@ void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte[MAXSIZE][MAXSIZE]){
 		if (maze[i][j] == '$'){
 			parte[i][j].saida = 1 ;
 	}
+=======
+
+		if (maze[i][j] == '*'){ 
+			parte[i][j].andou = 1;
+	   }
+		if (maze[i][j] == '+'){
+			parte[i][j].morreu = 1;
+	   }
+		if (maze[i][j] == '!'){
+			parte[i][j].matou = 1;
+	   }
+		if (maze[i][j] == '$'){
+			parte[i][j].saida = 1 ;
+			end->i = i;
+			end->j = j;
+	   }
+>>>>>>> Stashed changes
 		if (maze[i][j] == 'v'){
 			parte[i][j].vitoria=1 ;
 	}
 }
 }
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
 }
