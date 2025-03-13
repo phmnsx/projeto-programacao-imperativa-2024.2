@@ -23,6 +23,8 @@ struct node
 			   // 2 = faz parte da solução
 			   // 3 = início
 			   // 4 = final
+			   // 5 = inimigo
+			   // 6 = inimigo andado
 };
 typedef struct
 {
@@ -39,10 +41,18 @@ typedef struct
 } tile;
 
 /* Funçoes */
-node makeNode(node* pai, int i, int j);
-//void freeNodes(node* root);
-void readArchive(char maze[MAXSIZE][MAXSIZE], int *rows, int *columns, char *archiveName); 
+node makeNode(node* pai, int i, int j); //cria node com esse parent nessa posição
+void arraycpy(node copy[MAXSIZE][MAXSIZE], node original[MAXSIZE][MAXSIZE], int rows, int columns); //acho q funciona!!!! // copia de original pra copy, com essas dimensões (não retorno) (algm testa dps pfv)
 
+void solveMaze (point pathArray[1000], node array[MAXSIZE][MAXSIZE], int rows, int columns, int inimigosBool, point end); // solveMaze resolve o labirinto e guarda o caminho em "PathArray", não sei fazer
+																														  // tamanho dinâmico e recomendo q vc coloque esse msm tamanho aí na array q vc quer a
+																														  // resposta qnd for usar. pathArray [point inicio .... point final, NULLPOINT]
+																														  // NULLPOINT é (-1, -1) pq não tem esse espaço uma array ent da pra vc sempre falar
+																														  // q n era pra ter nada ali (determinar o final da leitura talvez?)
+																														  // se o ínicio for NULLPOINT não achou caminho.
+																														  
+void readArchive(char maze[MAXSIZE][MAXSIZE], int *rows, int *columns, char *archiveName); 							  
+point getPoint(node currentNode, int ger); // função auxiliar pra a "lista" de parents de um node (vc não vai usar)
 
 int main()
 {
@@ -152,39 +162,16 @@ int main()
 			}
 		}
 	}
-	arraycpy(tmp_array, array); //criar função q (copia, copiado)
+	arraycpy(tmp_array, array, rows, columns); //criar função q (cópia, copiado)
 								//recebe pointer de array e tamanhos?
 								
 	//caso espaço seja andável, criar node nele;
 	//repete para todos os nodes
-	int endReached = 0;
-	while(endReached == 0)
-	{
-	for (int i = 0; i < rows ; i++)
-	{
-		for (int j = 0 ; i < columns; j++)
-		{
-			if ((array[i][j].state == 3) || (array[i][j].state == 1)) // Se for inicio ou andado
-			{
-				for ( k = -1; k <= -1 ; k+2)
-				{
-					if (array[i + k][j].state == 0) // Se for andável
-					{
-						tmp_array[i + k][j].state = 1;
-						tmp_array[i + k][j].parent = &array[i][j];
-					}
-					if (array[i][j + k].state == 0) // Se for andável
-					{
-						tmp_array[i][j + k].state = 1;
-						tmp_array[i][j + k].parent = &array[i][j]; // endereço certo ??
-					}
-				}
-			}
-		}
-	}
-	arraycpy(array, tmp_array); // atualiza array pra ser tmp_array
-	endReached = isEndReached(array);
-	}
+	point pathArr[100];
+	int inimigos = 0;
+	solveMaze(pathArr, array, rows, columns, inimigos , end); //guarda resultado nessa array, de: array desses nodes, desse tamanho, e se ignora inimigos. e o end tb
+	
+
 	//caso posição do node seja igual à posição final, considere node "completo"
 	//array com nodes completas?
 	
@@ -245,4 +232,104 @@ void readArchive(char maze[MAXSIZE][MAXSIZE], int *rows, int *columns, char *arc
 	
 	fclose(archive);
 
+}
+
+void arraycpy(node copy[MAXSIZE][MAXSIZE], node original[MAXSIZE][MAXSIZE], int rows, int columns)
+{
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < columns; j++)
+		{
+			copy[i][j] = original[i][j];
+		}
+	}
+}
+
+void solveMaze(point pathArray[1000], node array[MAXSIZE][MAXSIZE], int rows, int columns, int inimigosBool, point end)
+{
+	point NULLPOINT;
+	NULLPOINT.i = -1;
+	NULLPOINT.j = -1;
+	
+	point tmp_pathArray[1000];
+	node tmp_array[rows][columns];
+	node endNode = makeNode(NULL, -1, -1);
+	int flag;
+	 
+	while(endNode.parent == NULL)
+	{
+		flag = 0;
+		for (int i = 0; i < rows; i++)
+		{
+			for (int j = 0 ; i < columns; j++)
+			{
+				if (array[i][j].state == 4)
+				{
+					endNode = array[i][j];
+				}
+				if ((array[i][j].state == 3) || (array[i][j].state == 1) || (array[i][j].state == 6)) // Se for inicio ou andado ou inimigo andado
+				{
+					for (int k = -1; k <= -1 ; k = k + 2)
+					{
+						if (array[i + k][j].state == 0 || (inimigosBool && array[i + k][j].state == 5)) // Se for andável
+						{
+							tmp_array[i + k][j].state = 1;
+							tmp_array[i + k][j].parent = &array[i][j];
+							flag++;	
+						}
+						if (array[i][j + k].state == 0 || (inimigosBool && array[i][j + k].state == 5)) // Se for andável
+						{
+							tmp_array[i][j + k].state = 1;
+							tmp_array[i][j + k].parent = &array[i][j]; // endereço certo ??
+							flag++;
+						}
+					}
+				}
+			}
+		}
+	
+		arraycpy(array, tmp_array, rows, columns); // atualiza array pra ser tmp_array
+		if ((flag == 0) && (endNode.parent == NULL)) //Se não fizer conexão nova e o fim não foi encontrado
+		{
+			pathArray[0] = NULLPOINT;
+			return;
+		}
+	}
+	int size;
+	for(size = 0; size < 1000; size++)
+	{
+		pathArray[size] = getPoint(endNode, size);
+		if ((pathArray[size].i == NULLPOINT.i) && (pathArray[size].j == NULLPOINT.j))
+		{
+			break;
+		}
+	}
+	for (int i = 0; i < size; i++)
+	{
+		tmp_pathArray[i] = pathArray[size - i - 1];
+	}
+	for (int i = 0; i < size; i++)
+	{
+		pathArray[i] = tmp_pathArray[i];
+	}
+}
+
+point getPoint(node currentNode, int ger)
+{
+	point NULLPOINT;
+	NULLPOINT.i = -1;
+	NULLPOINT.j = -1;
+	
+	if (currentNode.parent == NULL)
+	{
+		return NULLPOINT;
+	}
+	if (ger == 0)
+	{
+		return currentNode.pos;
+	}
+	else 
+	{
+		return getPoint(*currentNode.parent, ger - 1);
+	}
 }
