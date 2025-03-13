@@ -55,7 +55,11 @@ void solveMaze (point pathArray[400], node array[MAXSIZE][MAXSIZE], int rows, in
 void readArchive(char maze[MAXSIZE][MAXSIZE], int *rows, int *columns, char *archiveName); 							  
 point getPoint(node currentNode, int ger); // função auxiliar pra a "lista" de parents de um node (vc não vai usar)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE]); // função que transforma todos os chars do labirinto em tiles
+=======
+void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], point* start, point* end, int rows, int columns); // função que transforma todos os chars do labirinto em tiles   ; adicionado: pointer do ponto inicio e saída : )
+>>>>>>> Stashed changes
 =======
 void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], point* start, point* end, int rows, int columns); // função que transforma todos os chars do labirinto em tiles   ; adicionado: pointer do ponto inicio e saída : )
 >>>>>>> Stashed changes
@@ -310,10 +314,13 @@ point getPoint(node currentNode, int ger)
 }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte[MAXSIZE][MAXSIZE]){
 	for (int i =0; i< MAXSIZE; i++){
 	for (int j = 0; j <MAXSIZE; j++){
 =======
+=======
+>>>>>>> Stashed changes
 void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], point* start, point* end, int rows, int columns){
 	for (int i =0; i< rows; i++){
 	for (int j = 0; j < columns; j++){
@@ -322,6 +329,9 @@ void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], poi
 			start->i = i;
 			start->j = j;
 		}
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 		if (maze[i][j] == '#'){ 
 			parte[i][j].parede = 1;
@@ -332,6 +342,7 @@ void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], poi
 		if (maze[i][j] == '%'){ 
 			parte[i][j].inimigo = 1;
 		}
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 		if (maze[i][j] == '$'){ 
 			parte[i][j].chegada = 1;
@@ -349,6 +360,8 @@ void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], poi
 			parte[i][j].saida = 1 ;
 	}
 =======
+=======
+>>>>>>> Stashed changes
 
 		if (maze[i][j] == '*'){ 
 			parte[i][j].andou = 1;
@@ -364,6 +377,9 @@ void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], poi
 			end->i = i;
 			end->j = j;
 	   }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 		if (maze[i][j] == 'v'){
 			parte[i][j].vitoria=1 ;
@@ -371,6 +387,11 @@ void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], poi
 }
 }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
 =======
 
 
