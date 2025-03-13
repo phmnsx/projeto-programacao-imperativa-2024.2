@@ -54,15 +54,9 @@ void solveMaze (point pathArray[400], node array[MAXSIZE][MAXSIZE], int rows, in
 																														  
 void readArchive(char maze[MAXSIZE][MAXSIZE], int *rows, int *columns, char *archiveName); 							  
 point getPoint(node currentNode, int ger); // função auxiliar pra a "lista" de parents de um node (vc não vai usar)
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE]); // função que transforma todos os chars do labirinto em tiles
-=======
+
 void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], point* start, point* end, int rows, int columns); // função que transforma todos os chars do labirinto em tiles   ; adicionado: pointer do ponto inicio e saída : )
->>>>>>> Stashed changes
-=======
-void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], point* start, point* end, int rows, int columns); // função que transforma todos os chars do labirinto em tiles   ; adicionado: pointer do ponto inicio e saída : )
->>>>>>> Stashed changes
+
 
 int main()
 {
@@ -131,6 +125,8 @@ int main()
 			}
 		}
 	}
+	
+	
 	for (int i = 0; i < rows; i++)
 	{
 		for (int j = 0; j < columns ; j++)
@@ -138,13 +134,22 @@ int main()
 			tmp_array[i][j] = makeNode(NULL, -1, -1);
 		}
 	}
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < columns ; j++)
+		{
+			printf("(%d %d) ", array[i][j].pos.i, array[i][j].pos.j);
+		}
+		printf("\n");
+	}
+
 	arraycpy(tmp_array, array, rows, columns); //criar função q (cópia, copiado)
 								//recebe pointer de array e tamanhos?
 	for (int i = 0; i < rows; i++)
 	{
 		for (int j = 0; j < columns ; j++)
 		{
-			printf("(%d %d) ", tmp_array[i][j].pos.i, tmp_array[i][j].pos.j);
+			printf("(%d %d) ", array[i][j].pos.i, array[i][j].pos.j);
 		}
 		printf("\n");
 	}
@@ -155,7 +160,7 @@ int main()
 	
 	//função de (tile maze[][] -> node array[][]) !! 
 	
-	solveMaze(pathArr, array, rows, columns, inimigos , end); //guarda resultado nessa array, de: array desses nodes, desse tamanho, e se ignora inimigos. e o end tb
+	//solveMaze(pathArr, array, rows, columns, inimigos , end); //guarda resultado nessa array, de: array desses nodes, desse tamanho, e se ignora inimigos. e o end tb
 	
 	//caso posição do node seja igual à posição final, considere node "completo"
 	//array com nodes completas?
@@ -313,14 +318,8 @@ point getPoint(node currentNode, int ger)
 	}
 }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte[MAXSIZE][MAXSIZE]){
-	for (int i =0; i< MAXSIZE; i++){
-	for (int j = 0; j <MAXSIZE; j++){
-=======
-=======
->>>>>>> Stashed changes
+
+
 void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], point* start, point* end, int rows, int columns){
 	for (int i =0; i< rows; i++){
 	for (int j = 0; j < columns; j++){
@@ -329,10 +328,6 @@ void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], poi
 			start->i = i;
 			start->j = j;
 		}
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 		if (maze[i][j] == '#'){ 
 			parte[i][j].parede = 1;
 		}
@@ -342,8 +337,6 @@ void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], poi
 		if (maze[i][j] == '%'){ 
 			parte[i][j].inimigo = 1;
 		}
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 		if (maze[i][j] == '$'){ 
 			parte[i][j].chegada = 1;
 	}
@@ -357,43 +350,13 @@ void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], poi
 			parte[i][j].matou = 1;
 	}
 		if (maze[i][j] == '$'){
-			parte[i][j].saida = 1 ;
-	}
-=======
-=======
->>>>>>> Stashed changes
-
-		if (maze[i][j] == '*'){ 
-			parte[i][j].andou = 1;
-	   }
-		if (maze[i][j] == '+'){
-			parte[i][j].morreu = 1;
-	   }
-		if (maze[i][j] == '!'){
-			parte[i][j].matou = 1;
-	   }
-		if (maze[i][j] == '$'){
-			parte[i][j].saida = 1 ;
+			parte[i][j].saida = 1;
 			end->i = i;
 			end->j = j;
-	   }
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+	}
 		if (maze[i][j] == 'v'){
-			parte[i][j].vitoria=1 ;
+			parte[i][j].vitoria = 1 ;
 	}
 }
 }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-
-
->>>>>>> Stashed changes
-=======
-
-
->>>>>>> Stashed changes
 }
