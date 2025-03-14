@@ -57,7 +57,8 @@ void readArchive(char maze[MAXSIZE][MAXSIZE], int *rows, int *columns, char *arc
 point getPoint(node currentNode, int ger); // função auxiliar pra a "lista" de parents de um node (vc não vai usar)
 
 void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], point* start, point* end, int rows, int columns); // função que transforma todos os chars do labirinto em tiles   ; adicionado: pointer do ponto inicio e saída : )
-void cleanerPath (point path[400], tile parte[MAXSIZE][MAXSIZE]);
+void cleanerPath (point path[400], tile parte[MAXSIZE][MAXSIZE], int porcentWin); /* Em relação ao porcentWin:
+																					colocar "= 5" para modo 1 e "= 10" para modo 2 */
 
 
 int main()
@@ -363,8 +364,7 @@ void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], poi
 }
 
 
-void cleanerpath (point path[400], tile parte[MAXSIZE][MAXSIZE]){ // limpa o caminho ou mata o personagem
-	int porcentWin = 5;
+void cleanerpath (point path[400], tile parte[MAXSIZE][MAXSIZE], int porcentWin){ // limpa o caminho ou mata o personagem
 	for (int p = 0; p < 400; p++){
 		int x = path[p].i;
 		int y = path[p].j;
