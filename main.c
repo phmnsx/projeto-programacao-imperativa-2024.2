@@ -46,7 +46,7 @@ typedef struct
 /* Funçoes */
 node makeNode(node* pai, int i, int j); //cria node com esse parent nessa posição
 
-void solveMaze (point pathArray[400], node array[MAXSIZE][MAXSIZE], int rows, int columns, int inimigosBool, point end); // solveMaze resolve o labirinto e guarda o caminho em "PathArray", não sei fazer
+void solveMaze (point* pathArray, node (*array)[], int rows, int columns, int inimigosBool, point end); // solveMaze resolve o labirinto e guarda o caminho em "PathArray", não sei fazer
 																														  // tamanho dinâmico e recomendo q vc coloque esse msm tamanho aí na array q vc quer a
 																														  // resposta qnd for usar. pathArray [point inicio .... point final, NULLPOINT]
 																														  // NULLPOINT é (-1, -1) pq não tem esse espaço uma array ent da pra vc sempre falar
@@ -197,7 +197,7 @@ void readArchive(char maze[MAXSIZE][MAXSIZE], int *rows, int *columns, char *arc
 
 }
 
-void solveMaze(point pathArray[400], node array[MAXSIZE][MAXSIZE], int rows, int columns, int inimigosBool, point end)
+void solveMaze (point* pathArray, node (*array)[], int rows, int columns, int inimigosBool, point end)
 {	
 	point NULLPOINT;
 	NULLPOINT.i = -1;
