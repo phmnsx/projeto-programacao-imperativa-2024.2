@@ -60,32 +60,6 @@ void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], poi
 
 int main()
 {
-	//ler modo
-	int modo = 0;
-	// diferente != 
-	while (modo != 4){
-	printf ("qual o modo?\n"); //da flush no terminal
-	scanf ("%i", &modo);
-	if (modo == 1){
-		
-		void solveMaze (point pathArray[400], node array[MAXSIZE][MAXSIZE], int rows, int columns, int inimigosBool, point end);
-	}
-	
-	if (modo == 2) {
-		
-		
-	}
-	
-	if (modo == 3){
-		
-	}
-
-
-
-	if (modo == 4){
-			//return 0;
-	}
-	
 
 	//tamanho[i][j]
 	char rawMaze[MAXSIZE][MAXSIZE];
@@ -169,9 +143,29 @@ int main()
 	
 	//se modo 4, return 0;
 	//se modo 3 salve a solução em um arquivo;
+	//ler modo
+	int modo = 0;
+	while (modo != 4){
+	printf ("qual o modo?\n"); //da flush no terminal
+	scanf ("%i", &modo);
+	if (modo == 1){
+		
+		void solveMaze (point pathArray[400], node array[MAXSIZE][MAXSIZE], int rows, int columns, int inimigosBool, point end);
+	}
+	
+	if (modo == 2) {
+		
+		
+	}
+	
+	if (modo == 3){
+		
+	}
+}
+
 	
 }
-} 
+ 
 
 
 node makeNode(node *pai, int i, int j)
