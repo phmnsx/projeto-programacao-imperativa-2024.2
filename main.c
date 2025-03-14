@@ -117,9 +117,6 @@ int main()
 	}
 	memcpy(tmp_array, array, sizeof(array));
 	
-
-	//caso espaço seja andável, criar node nele;
-	//repete para todos os nodes
 	point pathArr[400];
 	for (int i = 0; i < 400; i++)
 	{
@@ -130,8 +127,6 @@ int main()
 	
 	
 	solveMaze(pathArr, array, rows, columns, inimigos , end); //guarda resultado nessa array, de: array desses nodes, desse tamanho, e se ignora inimigos. e o end tb
-	//caso posição do node seja igual à posição final, considere node "completo"
-	//array com nodes completas?
 	
 	//caso len(array) = 0, considere inimigos como não sendo paredes
 	//caso len(array) = 0 de novo, não há solução :(
@@ -270,7 +265,6 @@ void solveMaze(point pathArray[400], node array[MAXSIZE][MAXSIZE], int rows, int
 				}
 			}
 		}
-
 		memcpy(tmp_array2, tmp_array, sizeof(tmp_array)); // atualiza array pra ser tmp_array
 		
 		if ((flag == 0) && (endNode.parent == NULL)) //Se não fizer conexão nova e o fim não foi encontrado
