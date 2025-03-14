@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "functions.c"
+#include <time.h>
 
 /* Constantes */
 #define MAXSIZE 20
@@ -12,6 +13,12 @@ typedef struct
 	int i;
 	int j;
 } point;
+
+typedef struct 
+{
+	int porcentwin;
+	point posbattle;
+} battle;
 
 typedef struct node node;
 struct node
@@ -56,11 +63,12 @@ void readArchive(char maze[MAXSIZE][MAXSIZE], int *rows, int *columns, char *arc
 point getPoint(node currentNode, int ger); // função auxiliar pra a "lista" de parents de um node (vc não vai usar)
 
 void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], point* start, point* end, int rows, int columns); // função que transforma todos os chars do labirinto em tiles   ; adicionado: pointer do ponto inicio e saída : )
+void cleanerPath (point path[400], tile parte[MAXSIZE][MAXSIZE], battle fire, point cleanpath [400]);
 
 
 int main()
 {
-
+	srand(time(NULL)); // deixando o rand aleatório
 	//tamanho[i][j]
 	char rawMaze[MAXSIZE][MAXSIZE];
 	tile maze[MAXSIZE][MAXSIZE];
@@ -151,6 +159,7 @@ int main()
 	if (modo == 1){
 		
 		void solveMaze (point pathArray[400], node array[MAXSIZE][MAXSIZE], int rows, int columns, int inimigosBool, point end);
+		void cleanerPath (point pathArray[400], tile parte[MAXSIZE][MAXSIZE], battle fire, point cleanpath [400]);
 	}
 	
 	if (modo == 2) {
@@ -360,3 +369,34 @@ void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], poi
 }
 }
 }
+
+
+void cleanerpath (point path[400], tile parte[MAXSIZE][MAXSIZE], battle fire, point cleanpath [400] ){ // limpa o caminho ou mata o personagem
+	fire.porcentwin = 5;
+	for (int p = 0; p < 400; p++){
+		int x = path[p].i;
+		int y = path[p].j;
+		
+		if (parte[x][y].inimigo == 1){ //tem inimigo
+			
+			if (fire.porcentwin > rand () % 9 ){ //ganha a luta
+				parte[x][y].matou = 1;
+				path[p] = cleanpath[p];
+				
+				if (fire.porcentwin <= 9){
+					fire.porcentwin++;
+			 }	
+			}else { //perde a luta
+				parte[x][y].morreu = 1;
+				path[p] = cleanpath[p];
+				cleanpath[p+1].i = -1;
+				cleanpath[p+1].j = -1;
+				break;
+				
+			}	
+			}else{ // não tem inimigo
+			path[p] = cleanpath[p];	
+			}	
+	}
+	}
+
