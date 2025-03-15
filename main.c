@@ -34,11 +34,11 @@ typedef struct
 	int parede;
 	int chao;
 	int inimigo;
-	int chegada;
 	int andou;
 	int morreu;
 	int matou;
 	int vitoria;
+	int perdeu;
 	int saida;
 	point pos;
 } tile;
@@ -59,7 +59,8 @@ point getPoint(node currentNode, int ger); // função auxiliar pra a "lista" de
 void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], point* start, point* end, int rows, int columns); // função que transforma todos os chars do labirinto em tiles   ; adicionado: pointer do ponto inicio e saída : )
 void cleanerPath (point path[400], tile parte[MAXSIZE][MAXSIZE], int porcentWin); /* Em relação ao porcentWin:
 																					colocar "= 5" para modo 1 e "= 10" para modo 2 */
-
+																					
+void pathTileChar (point path [400], tile parte [MAXSIZE][MAXSIZE], char maze [MAXSIZE][MAXSIZE], int rows, int columns);
 
 int main()
 {
@@ -334,7 +335,7 @@ void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], poi
 			parte[i][j].inimigo = 1;
 		}
 		if (maze[i][j] == '$'){ 
-			parte[i][j].chegada = 1;
+			parte[i][j].saida = 1;
 	}
 		if (maze[i][j] == '*'){ 
 			parte[i][j].andou = 1;
@@ -359,9 +360,12 @@ void charToTile (char maze[MAXSIZE][MAXSIZE], tile parte [MAXSIZE][MAXSIZE], poi
 
 
 void cleanerpath (point path[400], tile parte[MAXSIZE][MAXSIZE], int porcentWin){ // limpa o caminho ou mata o personagem
+	int x, y;
 	for (int p = 0; p < 400; p++){
-		int x = path[p].i;
-		int y = path[p].j;
+		if ((path[p].i != -1) && (path[p].j !=-1)){
+		x = path[p].i;
+		y = path[p].j;
+	}
 		
 		if (parte[x][y].inimigo == 1){ //tem inimigo
 			
@@ -383,4 +387,58 @@ void cleanerpath (point path[400], tile parte[MAXSIZE][MAXSIZE], int porcentWin)
 			}
 			}	
 	}
+	
+void pathTileChar (point path [400], tile parte [MAXSIZE][MAXSIZE], char maze [MAXSIZE][MAXSIZE], int rows, int columns){
+int x, y, k, l;
+for (int p = 0; p < 400; p++){
+		if ((path[p].i != -1) && (path[p].j != -1)){
+		x = path[p].i;
+		y = path[p].j;
+	}
+		
+		if ((parte[x][y].matou != 1) || (parte[x][y].morreu != 1)){ // transforma o path em um tile
+			parte[x][y].andou = 1;
+			parte[x][y].chao = 0;
+		}
+		
+		if ((parte[x][y].andou == 1) && (parte[x][y] == 1 saida)){ // coloca o vitoria
+			parte[x][y].andou = 0;
+			parte[x][y].saida = 0;
+			parte[x][y].vitoria=1;
+		}
+		
+		if (){
+
+	}
+		
+	}
+		
+		
+		for (int a=0; a < rows; a++){
+			for (int b =0; a < columns){	
+			
+				if (part[a][b].perdeu == 1){
+					
+				}
+				if (parte[a][b].matou == 1){
+					printf ("+");
+				}
+				
+				}
+				printf ("/n");
+			}
+
+		}
+		
+			
+		
+		
+		
+	
+	
+	
+	
+	
+	
+	
 
