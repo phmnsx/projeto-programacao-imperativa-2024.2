@@ -180,9 +180,9 @@ void charToTile(char maze[MAXSIZE][MAXSIZE], tile parte[MAXSIZE][MAXSIZE], point
 
 
 void pathTileChar(point path[400], tile parte[MAXSIZE][MAXSIZE], char maze[MAXSIZE][MAXSIZE], int rows, int columns) {
-    int x, y;
+    int x, y, p;
 
-    for (int p = 0; p < 400; p++) {
+    for (p = 0; p < 400; p++) {
         if (path[p].i != -1 && path[p].j != -1) {
             x = path[p].i;
             y = path[p].j;
@@ -197,15 +197,23 @@ void pathTileChar(point path[400], tile parte[MAXSIZE][MAXSIZE], char maze[MAXSI
                 parte[x][y].saida = 0;
                 parte[x][y].vitoria = 1;
             }
-        }
+            
+         
+        } else break;  
     }
+		p= p-1;
+		if (parte[path[p].i][path[p].j].saida != 1){ // Detecta se o personagem se perdeu
+			parte[path[p].i][path[p].j].perdeu = 1;
+			parte[path[p].i][path[p].j].andou =0;
+			
+		}
 
     for (int a = 0; a < rows; a++) {
         for (int b = 0; b < columns; b++) {
-            if (parte[a][b].perdeu == 1) {
-                printf("X");  // TODO ver qual eh o simbolo de perdeu...
+            if (parte[a][b].morreu == 1) {
+                printf("+");  // TODO ver qual eh o simbolo de perdeu...
             } else if (parte[a][b].matou == 1) {
-                printf("+");
+                printf("!");
             } else {
                 printf("%c", maze[a][b]);
             }
@@ -222,7 +230,7 @@ void cleanerpath (point path[400], tile parte[MAXSIZE][MAXSIZE], int porcentWin)
 		if ((path[p].i != -1) && (path[p].j !=-1)){
 			x = path[p].i;
 			y = path[p].j;
-    	}
+    	}else break;
 		
 		if (parte[x][y].inimigo == 1){ //tem inimigo
 			
@@ -253,11 +261,13 @@ void printSolvedMaze(tile maze[MAXSIZE][MAXSIZE], int rows, int columns) {
         for (int j = 0; j < columns; j++) {
             if (maze[i][j].inicio) printf("@ ");
             else if (maze[i][j].parede) printf("# ");
+            else if (maze[i][j].inimigo) printf("%% ");
             else if (maze[i][j].saida) printf("$ ");
             else if (maze[i][j].vitoria) printf("V ");
             else if (maze[i][j].matou) printf("! ");
-            else if (maze[i][j].morreu) printf("X ");
+            else if (maze[i][j].morreu) printf("+ ");
             else if (maze[i][j].andou) printf("* ");
+             else if (maze[i][j].perdeu) printf("? ");
             else printf(". ");
         }
         printf("\n");

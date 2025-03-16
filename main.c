@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "functions.h"
+#include "functions.c"
 #include <time.h>
 
 /* 
@@ -87,8 +87,6 @@ int main()
 	//caso len(array) = 0, considere inimigos como não sendo paredes
 	//caso len(array) = 0 de novo, não há solução :(
 	
-	//conte quantos inimigos tem nos caminhos e escolha os que tem menos (menor igual ao menor)
-	
 	//conte o tamanho dos caminhos válidos, e escolha o menor
 	//pegue posição de cada node relacionada a node escolhida e substitua por caracteres apropriados
 	
@@ -103,6 +101,7 @@ int main()
 	printf ("qual o modo?\n"); //da flush no terminal
 	scanf ("%i", &modo);
 	if (modo == 1){
+	
 	
 	}
 	
