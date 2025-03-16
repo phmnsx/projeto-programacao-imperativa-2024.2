@@ -134,11 +134,14 @@ point getPoint(node currentNode, int ger) {
 void charToTile(char maze[MAXSIZE][MAXSIZE], tile parte[MAXSIZE][MAXSIZE], point* start, point* end, int rows, int columns) {
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
+			// Zera todos os campos da struct para evitar valores residuais
+            parte[i][j] = (tile){0};
             switch (maze[i][j]) {
                 case '@':
                     parte[i][j].inicio = 1;
                     start->i = i;
                     start->j = j;
+					//printf("DEBUG: Start definido em (%d, %d)\n", start->i, start->j);
                     break;
                 case '#':
                     parte[i][j].parede = 1;
@@ -153,6 +156,7 @@ void charToTile(char maze[MAXSIZE][MAXSIZE], tile parte[MAXSIZE][MAXSIZE], point
                     parte[i][j].saida = 1;
                     end->i = i;
                     end->j = j;
+					//printf("DEBUG: end definido em (%d, %d)\n", end->i, end->j);
                     break;
                 case '*':
                     parte[i][j].andou = 1;
@@ -241,3 +245,23 @@ void cleanerpath (point path[400], tile parte[MAXSIZE][MAXSIZE], int porcentWin)
 		}
 	}	
 }
+
+
+void printSolvedMaze(tile maze[MAXSIZE][MAXSIZE], int rows, int columns) {
+    printf("\nLabirinto resolvido:\n");
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
+            if (maze[i][j].inicio) printf("@ ");
+            else if (maze[i][j].parede) printf("# ");
+            else if (maze[i][j].saida) printf("$ ");
+            else if (maze[i][j].vitoria) printf("V ");
+            else if (maze[i][j].matou) printf("! ");
+            else if (maze[i][j].morreu) printf("X ");
+            else if (maze[i][j].andou) printf("* ");
+            else printf(". ");
+        }
+        printf("\n");
+    }
+}
+
+
