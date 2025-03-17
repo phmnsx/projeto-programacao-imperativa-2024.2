@@ -92,12 +92,8 @@ int main()
 	solveMaze(pathArr, array, rows, columns, 0 , end);
 	if (pathArr[0].i == -1)
 	{
-		solveMaze(pathArr, array, rows, columns, 1 , end);
-		if (pathArr[0].i == -1)
-		{
-			printf("Labirinto sem solucao.\n");
-			return 0;
-		}
+		printf("Labirinto sem solucao.\n");
+		return 0;
 	}
 	cleanerpath(pathArr, tmp_maze, porcentWin);
 	pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);
@@ -110,12 +106,8 @@ int main()
 	solveMaze(pathArr, array, rows, columns, 0 , end);
 	if (pathArr[0].i == -1)
 	{
-		solveMaze(pathArr, array, rows, columns, 1 , end);
-		if (pathArr[0].i == -1)
-		{
-			printf("Labirinto sem solucao.\n");
-			return 0;
-		}
+		printf("Labirinto sem solucao.\n");
+		return 0;
 	}
 	cleanerpath(pathArr, tmp_maze, porcentWin);
 	pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);
@@ -129,12 +121,8 @@ int main()
 	solveMaze(pathArr, array, rows, columns, 0 , end);
 	if (pathArr[0].i == -1)
 	{
-		solveMaze(pathArr, array, rows, columns, 1 , end);
-		if (pathArr[0].i == -1)
-		{
-			printf("Labirinto sem solucao.\n");
-			return 0;
-		}
+		printf("Labirinto sem solucao.\n");
+		return 0;
 	}
 	cleanerpath(pathArr, tmp_maze, porcentWin);
 	pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);

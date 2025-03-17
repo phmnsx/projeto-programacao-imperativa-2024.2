@@ -97,10 +97,18 @@ void solveMaze(point* pathArray, node (*array)[], int rows, int columns, int ini
 		}
 		memcpy(tmp_array2, tmp_array, sizeof(tmp_array)); // atualiza array pra ser tmp_array
 		
-		if ((flag == 0) && (endNode.parent == NULL)) //Se não fizer conexão nova e o fim não foi encontrado
+		if (inimigosBool)
 		{
-			pathArray[0] = NULLPOINT;
-			return;
+			inimigosBool = 0;
+			if (flag == 0)
+			{
+				pathArray[0] = NULLPOINT;
+				return;
+			}
+		}
+		if ((flag == 0)) //Se não fizer conexão nova e o fim não foi encontrado
+		{
+			inimigosBool = 1;
 		}
 	}
 	int size;
