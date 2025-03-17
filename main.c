@@ -23,6 +23,7 @@ int main()
 	//tamanho[i][j]
 	char rawMaze[MAXSIZE][MAXSIZE];
 	tile maze[MAXSIZE][MAXSIZE];
+	tile tmp_maze[MAXSIZE][MAXSIZE];
 	point start;					
 	point end;						
 	
@@ -39,7 +40,7 @@ int main()
 	charToTile(rawMaze, maze, &start, &end, rows, columns);
 	
 	node array[rows][columns]; // i j, então rows columns
-	node tmp_array[rows][columns];
+
 	
 	//criar nodes, e "ativar" a no start
 	for (int i = 0; i < rows; i++)
@@ -47,7 +48,11 @@ int main()
 		for (int j = 0; j < columns; j++)
 		{
 			array[i][j] = makeNode(NULL, i, j); //crie uma node [i][j] andável
-			if (!(maze[i][j].chao||maze[i][j].saida)) //caso não seja chão
+			if (maze[i][j].inimigo)
+			{
+				array[i][j].state = 5;
+			}
+			else if (!(maze[i][j].chao || maze[i][j].saida)) //caso não seja chão
 			{
 				array[i][j].state = -1;//faça ser não andável
 			}
@@ -63,73 +68,77 @@ int main()
 		}
 	}
 	
-	
-	for (int i = 0; i < rows; i++)
-	{
-		for (int j = 0; j < columns ; j++)
-		{
-			tmp_array[i][j] = makeNode(NULL, -1, -1);
-		}
-	}
-	memcpy(tmp_array, array, sizeof(array));
-	
 	point pathArr[400];
 	for (int i = 0; i < 400; i++)
 	{
 		pathArr[i].i = 0;
 		pathArr[i].j = 0;
 	}
-	int inimigos = 0;
 	
-	
-	 // solveMaze(pathArr, array, rows, columns, inimigos , end); guarda resultado nessa array, de: array desses nodes, desse tamanho, e se ignora inimigos. e o end tb
-	
-	//caso len(array) = 0, considere inimigos como não sendo paredes
-	//caso len(array) = 0 de novo, não há solução :(
-	
-	//conte o tamanho dos caminhos válidos, e escolha o menor
-	//pegue posição de cada node relacionada a node escolhida e substitua por caracteres apropriados
-	
-	//se modo for 1, escolha se perde; mostre na tela
-	//se for modo 2, ignore; mostre na tela
-	
-	//se modo 4, return 0;
-	//se modo 3 salve a solução em um arquivo;
-	//ler modo
+
+	 
 	int modo = 0;
+	
 	while (modo != 4){
+	memcpy(tmp_maze, maze, sizeof(tmp_maze));
 	printf ("qual o modo?\n"); //da flush no terminal
-	scanf ("%i", &modo);
+	if (!(scanf ("%i", &modo)) || ((modo > 4) || (modo < 0)))
+	{
+		printf("Utilize apenas numeros de 1 a 4.");
+		return 1;
+	}
 	if (modo == 1){
 	int porcentWin = 5; // resolve apenas uma vez
-	solveMaze(pathArr, array, rows, columns, inimigos , end);
-	cleanerpath(pathArr, maze, porcentWin);
-	pathTileChar(pathArr, maze, rawMaze, rows, columns);
-	printSolvedMaze(maze, rows, columns);
+	solveMaze(pathArr, array, rows, columns, 0 , end);
+	if (pathArr[0].i == -1)
+	{
+		solveMaze(pathArr, array, rows, columns, 1 , end);
+		if (pathArr[0].i == -1)
+		{
+			printf("Labirinto sem solucao.\n");
+			return 0;
+		}
+	}
+	cleanerpath(pathArr, tmp_maze, porcentWin);
+	pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);
+	printSolvedMaze(tmp_maze, rows, columns);
+	
 	}
 	
 	if (modo == 2) {
-	int p, porcentWin = 10; // Resolve e imprime quando da vitoria
-	do {
-	solveMaze(pathArr, array, rows, columns, inimigos, end);
-	
-	for (p = 0; p < 400; p++){
-		if (pathArr[p].i == -1 && pathArr[p].j == -1){
-			p = p-1;
-			break;
+	int porcentWin = 10; // Resolve e imprime quando da vitoria
+	solveMaze(pathArr, array, rows, columns, 0 , end);
+	if (pathArr[0].i == -1)
+	{
+		solveMaze(pathArr, array, rows, columns, 1 , end);
+		if (pathArr[0].i == -1)
+		{
+			printf("Labirinto sem solucao.\n");
+			return 0;
 		}
 	}
-	cleanerpath(pathArr, maze, porcentWin);
-	pathTileChar(pathArr, maze, rawMaze, rows, columns);
-	} while (maze[pathArr[p].i][pathArr[p].j].vitoria != 1);
-	 
-	printSolvedMaze(maze, rows, columns);
-		
+	cleanerpath(pathArr, tmp_maze, porcentWin);
+	pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);
+	printSolvedMaze(tmp_maze, rows, columns);
 	}
 	
+	
 	if (modo == 3){
-		
-		
+	
+	int porcentWin = 10;
+	solveMaze(pathArr, array, rows, columns, 0 , end);
+	if (pathArr[0].i == -1)
+	{
+		solveMaze(pathArr, array, rows, columns, 1 , end);
+		if (pathArr[0].i == -1)
+		{
+			printf("Labirinto sem solucao.\n");
+			return 0;
+		}
+	}
+	cleanerpath(pathArr, tmp_maze, porcentWin);
+	pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);
+	// !!!!!! falta salvar tmp_maze em caracteres em um arquivo !!!!!!
 		
 	}
 }

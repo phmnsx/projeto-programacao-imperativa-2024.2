@@ -19,7 +19,14 @@ typedef struct node node;
 struct node {
     point pos;
     struct node* parent;
-    int state;
+    int state; // -1 = não andável
+			   // 0 = não andada,
+			   // 1 = andada
+			   // 2 = faz parte da solução
+			   // 3 = início
+			   // 4 = final
+			   // 5 = inimigo
+			   // 6 = inimigo andado <- INUTIL
 };
 
 typedef struct {
@@ -38,7 +45,7 @@ typedef struct {
 
 // Declaração das funções
 node makeNode(node* pai, int i, int j);
-void solveMaze (point* pathArray, node (*array)[], int rows, int columns, int inimigosBool, point end);
+void solveMaze(point* pathArray, node array[MAXSIZE][MAXSIZE], int rows, int columns, int inimigosBool, point end);
 void readArchive(char maze[MAXSIZE][MAXSIZE], int *rows, int *columns, char *archiveName);
 point getPoint(node currentNode, int ger);
 void charToTile(char maze[MAXSIZE][MAXSIZE], tile parte[MAXSIZE][MAXSIZE], point* start, point* end, int rows, int columns);
