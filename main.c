@@ -103,7 +103,7 @@ int main()
 	if (modo == 1){
 	int porcentWin = 5; // resolve apenas uma vez
 	solveMaze(pathArr, array, rows, columns, inimigos , end);
-	cleanerPath(pathArr, maze, porcentWin);
+	cleanerpath(pathArr, maze, porcentWin);
 	pathTileChar(pathArr, maze, rawMaze, rows, columns);
 	printSolvedMaze(maze, rows, columns);
 	}
@@ -119,7 +119,7 @@ int main()
 			break;
 		}
 	}
-	cleanerPath(pathArr, maze, porcentWin);
+	cleanerpath(pathArr, maze, porcentWin);
 	pathTileChar(pathArr, maze, rawMaze, rows, columns);
 	} while (maze[pathArr[p].i][pathArr[p].j].vitoria != 1);
 	 
