@@ -270,18 +270,29 @@ void printSolvedMaze(tile maze[MAXSIZE][MAXSIZE], int rows, int columns) {
 		{
 			if (maze[i][j].morreu)
 			{
-				flag++;
+				flag ++;
 			}
-		}
+			
+			if (maze[i][j].vitoria)
+			{
+				flag --;
+			}
 	}
-	if (flag)
+}
+	if (flag > 0)
 	{
 		printf("\nPersonagem Morreu:\n");
 	}
-    else
+    else if (flag < 0)
     {
 		printf("\nLabirinto resolvido:\n");
+		
 	}
+	 else if ( flag == 0)
+	 {
+		  printf ("\nLabirinto escolhido:\n");
+	 }
+	
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
             if (maze[i][j].inicio) printf("@ ");

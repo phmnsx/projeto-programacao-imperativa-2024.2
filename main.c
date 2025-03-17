@@ -39,6 +39,9 @@ int main()
 	// Traduzir de "char" para "tile" e definir start e end 
 	charToTile(rawMaze, maze, &start, &end, rows, columns);
 	
+	//Printa o labirinto escolhido
+	printSolvedMaze(maze, rows, columns);
+	
 	node array[rows][columns]; // i j, então rows columns
 
 	
@@ -75,13 +78,16 @@ int main()
 		pathArr[i].j = 0;
 	}
 	
-
 	 
 	int modo = 0;
 	
 	while (modo != 4){
 	memcpy(tmp_maze, maze, sizeof(tmp_maze));
 	printf ("qual o modo?\n"); //da flush no terminal
+	printf ("Modo 1: faz o labirinto escolhido uma vez.\n");
+	printf ("Modo 2: faz o labirinto escolhido ate resolve-lo.\n");
+	printf ("Modo 3: Salva labirinto resolvido.\n");
+	printf ("Modo 4: Sair.\n");
 	if (!(scanf ("%i", &modo)) || ((modo > 4) || (modo < 0)))
 	{
 		printf("Utilize apenas numeros de 1 a 4.");
