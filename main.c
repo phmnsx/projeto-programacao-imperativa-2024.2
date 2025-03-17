@@ -82,7 +82,7 @@ int main()
 	int inimigos = 0;
 	
 	
-	solveMaze(pathArr, array, rows, columns, inimigos , end); //guarda resultado nessa array, de: array desses nodes, desse tamanho, e se ignora inimigos. e o end tb
+	 // solveMaze(pathArr, array, rows, columns, inimigos , end); guarda resultado nessa array, de: array desses nodes, desse tamanho, e se ignora inimigos. e o end tb
 	
 	//caso len(array) = 0, considere inimigos como não sendo paredes
 	//caso len(array) = 0 de novo, não há solução :(
@@ -101,16 +101,35 @@ int main()
 	printf ("qual o modo?\n"); //da flush no terminal
 	scanf ("%i", &modo);
 	if (modo == 1){
-	
-	
+	int porcentWin = 5; // resolve apenas uma vez
+	solveMaze(pathArr, array, rows, columns, inimigos , end);
+	cleanerPath(pathArr, maze, porcentWin);
+	pathTileChar(pathArr, maze, rawMaze, rows, columns);
+	printSolvedMaze(maze, rows, columns);
 	}
 	
 	if (modo == 2) {
-		
+	int p, porcentWin = 10; // Resolve e imprime quando da vitoria
+	do {
+	solveMaze(pathArr, array, rows, columns, inimigos, end);
+	
+	for (p = 0; p < 400; p++){
+		if (pathArr[p].i == -1 && pathArr[p].j == -1){
+			p = p-1;
+			break;
+		}
+	}
+	cleanerPath(pathArr, maze, porcentWin);
+	pathTileChar(pathArr, maze, rawMaze, rows, columns);
+	} while (maze[pathArr[p].i][pathArr[p].j].vitoria != 1);
+	 
+	printSolvedMaze(maze, rows, columns);
 		
 	}
 	
 	if (modo == 3){
+		
+		
 		
 	}
 }

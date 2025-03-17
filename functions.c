@@ -208,7 +208,7 @@ void pathTileChar(point path[400], tile parte[MAXSIZE][MAXSIZE], char maze[MAXSI
 			
 		}
 
-    for (int a = 0; a < rows; a++) {
+   /* for (int a = 0; a < rows; a++) {
         for (int b = 0; b < columns; b++) {
             if (parte[a][b].morreu == 1) {
                 printf("+");  // TODO ver qual eh o simbolo de perdeu...
@@ -219,7 +219,7 @@ void pathTileChar(point path[400], tile parte[MAXSIZE][MAXSIZE], char maze[MAXSI
             }
         }
         printf("\n");
-    }
+    } */
 }
 
  
