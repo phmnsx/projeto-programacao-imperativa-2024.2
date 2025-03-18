@@ -132,8 +132,12 @@ int main()
 	}
 	cleanerpath(pathArr, tmp_maze, porcentWin);
 	pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);
-	// !!!!!! falta salvar tmp_maze em caracteres em um arquivo !!!!!!
+
+	char outFilename[50];
+	printf("Digite o nome do arquivo:\n");
+	scanf("%s", outFilename);
 		
+	saveSolvedMaze(tmp_maze, rows, columns, outFilename); // Função criada para salvar o labirinto resolvido 
 	}
 }
 
