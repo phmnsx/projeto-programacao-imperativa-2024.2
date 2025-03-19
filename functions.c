@@ -210,7 +210,7 @@ void pathTileChar(point path[400], tile parte[MAXSIZE][MAXSIZE], char maze[MAXSI
         } else break;  
     }
 		p= p-1;
-		if (parte[path[p].i][path[p].j].saida != 1 && parte[path[p].i][path[p].j].morreu != 1){ // Detecta se o personagem se perdeu
+		if (parte[path[p].i][path[p].j].vitoria != 1 && parte[path[p].i][path[p].j].morreu != 1){ // Detecta se o personagem se perdeu
 			parte[path[p].i][path[p].j].perdeu = 1;
 			parte[path[p].i][path[p].j].andou =0;
 			
