@@ -313,3 +313,29 @@ void printSolvedMaze(tile maze[MAXSIZE][MAXSIZE], int rows, int columns) {
 }
 
 
+void saveSolvedMaze(tile maze[MAXSIZE][MAXSIZE], int rows, int columns, const char *filename) {
+    FILE *file = fopen(filename, "w");
+    if (file == NULL) {
+        printf("Erro ao abrir o arquivo %s para escrita.\n", filename);
+        return;
+    }
+
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
+            if (maze[i][j].inicio) fprintf(file, "@ ");
+            else if (maze[i][j].parede) fprintf(file, "# ");
+            else if (maze[i][j].saida) fprintf(file, "$ ");
+            else if (maze[i][j].vitoria) fprintf(file, "V ");
+            else if (maze[i][j].matou) fprintf(file, "! ");
+            else if (maze[i][j].morreu) fprintf(file, "+ ");
+            else if (maze[i][j].andou) fprintf(file, "* ");
+            else if (maze[i][j].perdeu) fprintf(file, "? ");
+            else if (maze[i][j].inimigo) fprintf(file, "%% ");
+            else fprintf(file, ". ");
+        }
+        fprintf(file, "\n");
+    }
+
+    fclose(file);
+    printf("Labirinto resolvido salvo no arquivo %s.\n", filename);
+}
