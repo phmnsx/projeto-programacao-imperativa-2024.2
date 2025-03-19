@@ -52,5 +52,6 @@ void charToTile(char maze[MAXSIZE][MAXSIZE], tile parte[MAXSIZE][MAXSIZE], point
 void cleanerPath(point path[400], tile parte[MAXSIZE][MAXSIZE], int porcentWin);
 void pathTileChar(point path[400], tile parte[MAXSIZE][MAXSIZE], char maze[MAXSIZE][MAXSIZE], int rows, int columns);
 void printSolvedMaze(tile maze[MAXSIZE][MAXSIZE], int rows, int columns);
+void saveSolvedMaze(tile maze[MAXSIZE][MAXSIZE], int rows, int columns, const char *filename);
 
 #endif
