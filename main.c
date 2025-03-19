@@ -137,7 +137,7 @@ int main()
 	printf("Digite o nome do arquivo:\n");
 	scanf("%s", outFilename);
 		
-	saveSolvedMaze(tmp_maze, rows, columns, outFilename, 1); // Função criada para salvar o labirinto resolvido 
+	saveSolvedMaze(tmp_maze, rows, columns, outFilename); // Função criada para salvar o labirinto resolvido 
 	}
 }
 
