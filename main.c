@@ -88,7 +88,7 @@ int main()
 	printf ("Modo 2: faz o labirinto escolhido ate resolve-lo.\n");
 	printf ("Modo 3: Salva labirinto resolvido.\n");
 	printf ("Modo 4: faz o labirinto escolhido uma vez (estrategia inteligente).\n");
-	printf ("Modo 5: faz o labirinto escolhido ate resolve-lo (estrategia inteligente) (.\n");
+	printf ("Modo 5: faz o labirinto escolhido ate resolve-lo (estrategia inteligente).\n");
 	printf ("Modo 6: Sair.\n");
 	if (!(scanf ("%i", &modo)) || ((modo > 6) || (modo < 0)))
 	{
@@ -107,7 +107,7 @@ int main()
 	}
 
 	if (modo == 2) {
-	    while (true) {
+	    while (1) {
 	        solveMazeRand(pathArr, array, rows, columns, 0, end); 
 	        if (pathArr[0].i == -1) {
 	            printf("Labirinto sem solução.\n");
