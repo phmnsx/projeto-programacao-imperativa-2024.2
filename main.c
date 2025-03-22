@@ -97,7 +97,7 @@ int main()
 	}
 
 	if (modo == 1) {
-	    solveMazeRandom(pathArr, array, rows, columns, 0, end);
+	    solveMazeRand(pathArr, array, rows, columns, 0, end);
 	    if (pathArr[0].i == -1) {
 	        printf("Labirinto sem solução.\n");
 	    } else {
@@ -108,7 +108,7 @@ int main()
 
 	if (modo == 2) {
 	    while (true) {
-	        solveMazeRandom(pathArr, array, rows, columns, 0, end); 
+	        solveMazeRand(pathArr, array, rows, columns, 0, end); 
 	        if (pathArr[0].i == -1) {
 	            printf("Labirinto sem solução.\n");
 	            break;
