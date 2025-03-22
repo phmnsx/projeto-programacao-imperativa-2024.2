@@ -53,5 +53,6 @@ void cleanerPath(point path[400], tile parte[MAXSIZE][MAXSIZE], int porcentWin);
 void pathTileChar(point path[400], tile parte[MAXSIZE][MAXSIZE], char maze[MAXSIZE][MAXSIZE], int rows, int columns);
 void printSolvedMaze(tile maze[MAXSIZE][MAXSIZE], int rows, int columns);
 void saveSolvedMaze(tile maze[MAXSIZE][MAXSIZE], int rows, int columns, const char *filename);
+void solveMazeRand(point* pathArray, node (*array)[], int rows, int columns, int inimigosBool, point end);
 
 #endif
