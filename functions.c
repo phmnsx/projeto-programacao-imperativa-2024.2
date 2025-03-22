@@ -195,7 +195,7 @@ void pathTileChar(point path[400], tile parte[MAXSIZE][MAXSIZE], char maze[MAXSI
             x = path[p].i;
             y = path[p].j;
 
-            if (parte[x][y].matou != 1 || parte[x][y].morreu != 1) { // Transforma o caminho em um tile
+            if (parte[x][y].matou != 1 && parte[x][y].morreu != 1) { // Transforma o caminho em um tile
                 parte[x][y].andou = 1;
                 parte[x][y].chao = 0;
             }
