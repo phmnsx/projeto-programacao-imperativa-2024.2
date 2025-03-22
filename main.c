@@ -95,6 +95,36 @@ int main()
 		printf("Utilize apenas numeros de 1 a 6.");
 		return 1;
 	}
+
+	if (modo == 1) {
+	    solveMazeRandom(pathArr, array, rows, columns, 0, end);
+	    if (pathArr[0].i == -1) {
+	        printf("Labirinto sem solução.\n");
+	    } else {
+	        pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);
+	        printSolvedMaze(tmp_maze, rows, columns);
+	    }
+	}
+
+	if (modo == 2) {
+	    while (true) {
+	        solveMazeRandom(pathArr, array, rows, columns, 0, end); 
+	        if (pathArr[0].i == -1) {
+	            printf("Labirinto sem solução.\n");
+	            break;
+	        }
+	        pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);
+	        printSolvedMaze(tmp_maze, rows, columns);
+	
+	        if (tmp_maze[end.i][end.j].andou == 1) {
+	            printf("Labirinto resolvido!\n"); // adicionado devido à aleatoriedade
+	            break;
+	        }
+	
+	        memcpy(tmp_maze, maze, sizeof(tmp_maze));
+	    }
+	}
+		
 	if (modo == 4){
 	int porcentWin = 5; // resolve apenas uma vez
 	solveMaze(pathArr, array, rows, columns, 0 , end);
