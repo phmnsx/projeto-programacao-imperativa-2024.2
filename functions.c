@@ -340,19 +340,14 @@ void saveSolvedMaze(tile maze[MAXSIZE][MAXSIZE], int rows, int columns, const ch
     printf("Labirinto resolvido salvo no arquivo %s.\n", filename);
 }
 
-void solveMazeRand(point* pathArray, node (*array)[], int rows, int columns, int inimigosBool, point end)
-{ 
-    point NULLPOINT;
-    NULLPOINT.i = -1;
-    NULLPOINT.j = -1;
-	
+void solveMazeRand(point* pathArray, node (*array)[], int rows, int columns, int inimigosBool, point end) {
+    point NULLPOINT = {-1, -1};
     point tmp_pathArray[400];
     node tmp_array[rows][columns];
     node tmp_array2[rows][columns];
-    for (int i = 0; i < rows; i++) 
-    {
-        for (int j = 0; j < columns; j++) 
-	{
+
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
             tmp_array[i][j] = makeNode(NULL, -1, -1);
             tmp_array2[i][j] = makeNode(NULL, -1, -1);
         }
@@ -360,84 +355,73 @@ void solveMazeRand(point* pathArray, node (*array)[], int rows, int columns, int
     memcpy(tmp_array, array, sizeof(tmp_array));
     memcpy(tmp_array2, array, sizeof(tmp_array2));
 
-    node endNode = makeNode(NULL, -1, -1);
-    int flag;
+    node* currentNode = NULL;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
+            if (tmp_array2[i][j].state == 3) {
+                currentNode = &tmp_array2[i][j];
+                break;
+            }
+        }
+        if (currentNode != NULL) break;
+    }
 
-    while (endNode.parent == NULL)
-    {
-        flag = 0;
-        for (int i = 0; i < rows; i++) 
-	{
-            for (int j = 0; j < columns; j++)
-	    {
-                if ((tmp_array2[i][j].state == 3) || (tmp_array2[i][j].state == 1) || (tmp_array2[i][j].state == 6)) 
-		{
-        
-                    int directions[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; //4 possíveis direções/movimentos
-                    int validMoves[4]; //local de armazenamento dos movimentos 
-                    int validMoveCount = 0; //verificação da validez do movimento 
+    if (currentNode == NULL) {
+        pathArray[0] = NULLPOINT;
+        return;
+    }
 
-                    for (int k = 0; k < 4; k++) {
-                        int newI = i + directions[k][0];
-                        int newJ = j + directions[k][1];
-                        if (newI >= 0 && newI < rows && newJ >= 0 && newJ < columns) {
-                            if (tmp_array2[newI][newJ].state == 4) {
-                                
-                                tmp_array2[newI][newJ].parent = &tmp_array2[i][j];
-                                endNode = tmp_array2[newI][newJ];
-                                break;
-                            } else if ((tmp_array2[newI][newJ].state == 0) || (inimigosBool && (tmp_array2[newI][newJ].state == 5))) {
-                               
-                                validMoves[validMoveCount++] = k;
-                            }
-                        }
-                    }
+    int directions[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
-                    if (validMoveCount > 0) {
-                        int randomIndex = rand() % validMoveCount; //para gerar aleatoriedade 
-                        int move = validMoves[randomIndex];
-                        int newI = i + directions[move][0];
-                        int newJ = j + directions[move][1];
+    int pathIndex = 0;
+    while (1) {
+        if (currentNode->pos.i == end.i && currentNode->pos.j == end.j) {
+            break;
+        }
+        int validMoves[4];
+        int validMoveCount = 0;
 
-                        tmp_array[newI][newJ].state = 1;
-                        tmp_array[newI][newJ].parent = &tmp_array2[i][j];
-                        flag++;
-                    }
+        for (int k = 0; k < 4; k++) {
+            int newI = currentNode->pos.i + directions[k][0];
+            int newJ = currentNode->pos.j + directions[k][1];
+
+            if (newI >= 0 && newI < rows && newJ >= 0 && newJ < columns) {
+                if (tmp_array2[newI][newJ].state == 4) {
+			
+                    tmp_array2[newI][newJ].parent = currentNode;
+                    currentNode = &tmp_array2[newI][newJ];
+                    break;
+                } else if (tmp_array2[newI][newJ].state == 0 || (inimigosBool && tmp_array2[newI][newJ].state == 5)) {
+                  
+                    validMoves[validMoveCount++] = k;
                 }
             }
         }
 
-        memcpy(tmp_array2, tmp_array, sizeof(tmp_array));
+        if (validMoveCount == 0) {
+           
+            pathArray[0] = NULLPOINT;
+            printf("O personagem se perdeu...\n");
+            return;
+        } else {
 
-        if (inimigosBool)
-	{
-            inimigosBool = 0;
-            if (flag == 0)
-	    {
-                pathArray[0] = NULLPOINT;
-                return;
-            }
-        }
-        if (flag == 0) {
-            inimigosBool = 1;
+            int randomIndex = rand() % validMoveCount;
+            int move = validMoves[randomIndex];
+            int newI = currentNode->pos.i + directions[move][0];
+            int newJ = currentNode->pos.j + directions[move][1];
+
+            tmp_array2[newI][newJ].parent = currentNode;
+            tmp_array2[newI][newJ].state = 1; 
+            currentNode = &tmp_array2[newI][newJ];
+
+            pathArray[pathIndex++] = currentNode->pos;
         }
     }
 
-    int size;
-    for (size = 0; size < 400; size++) 
-    {
-        pathArray[size] = getPoint(endNode, size);
-        if ((pathArray[size].i == NULLPOINT.i) && (pathArray[size].j == NULLPOINT.j))
-	{
-            break;
-        }
+    for (int i = 0; i < pathIndex; i++) {
+        tmp_pathArray[i] = pathArray[i];
     }
-    for (int i = 0; i < size; i++)
-    {
-        tmp_pathArray[i] = pathArray[size - i - 1];
-    }
-    for (int i = 0; i < size; i++)
-    {
+    for (int i = 0; i < pathIndex; i++) {
         pathArray[i] = tmp_pathArray[i];
     }
 }
