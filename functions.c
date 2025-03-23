@@ -1,4 +1,6 @@
 #include "functions.h"
+#include <time.h>
+
 
 node makeNode(node* pai, int i, int j) {
     node newNode;
@@ -340,9 +342,11 @@ void saveSolvedMaze(tile maze[MAXSIZE][MAXSIZE], int rows, int columns, const ch
     printf("Labirinto resolvido salvo no arquivo %s.\n", filename);
 }
 
-void solveMazeRand(point* pathArray, node (*array)[], int rows, int columns, int inimigosBool, point end) {
+void solveMazeRand(point* pathArray, node array[MAXSIZE][MAXSIZE], int rows, int columns, int inimigosBool, point end) {
+	srand(time(NULL));
+	
     point NULLPOINT = {-1, -1};
-    point tmp_pathArray[400];
+    //point tmp_pathArray[400];
     node tmp_array[rows][columns];
     node tmp_array2[rows][columns];
 
@@ -372,56 +376,72 @@ void solveMazeRand(point* pathArray, node (*array)[], int rows, int columns, int
     }
 
     int directions[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-
+	int validMoves[4];
+	int validMoveCount = 0;
     int pathIndex = 0;
-    while (1) {
+    int endFound = 0;
+    
+    while (endFound == 0) {
+		memcpy(tmp_array2, tmp_array, sizeof(tmp_array2));
         if (currentNode->pos.i == end.i && currentNode->pos.j == end.j) {
             break;
         }
-        int validMoves[4];
-        int validMoveCount = 0;
+        
+        validMoveCount = 0;
 
         for (int k = 0; k < 4; k++) {
             int newI = currentNode->pos.i + directions[k][0];
             int newJ = currentNode->pos.j + directions[k][1];
 
-            if (newI >= 0 && newI < rows && newJ >= 0 && newJ < columns) {
+            if ((newI >= 0) && (newI < rows) && (newJ >= 0) && (newJ < columns)) {
                 if (tmp_array2[newI][newJ].state == 4) {
 			
-                    tmp_array2[newI][newJ].parent = currentNode;
+                    tmp_array[newI][newJ].parent = &array[currentNode->pos.i][currentNode->pos.j];
                     currentNode = &tmp_array2[newI][newJ];
+                    endFound = 1;
+                    printf("Achei");
                     break;
-                } else if (tmp_array2[newI][newJ].state == 0 || (inimigosBool && tmp_array2[newI][newJ].state == 5)) {
-                  
+                } else{
+					if ((tmp_array2[newI][newJ].state == 0) || (inimigosBool && (tmp_array2[newI][newJ].state == 5))) {
+					
                     validMoves[validMoveCount++] = k;
                 }
             }
         }
-
-        if (validMoveCount == 0) {
+		}
+		if (currentNode->state == 4)
+			{
+				endFound = 1;
+				printf("Achei");
+			}
+        else if (validMoveCount == 0) {
            
             pathArray[0] = NULLPOINT;
             printf("O personagem se perdeu...\n");
             return;
         } else {
-
+	
             int randomIndex = rand() % validMoveCount;
             int move = validMoves[randomIndex];
             int newI = currentNode->pos.i + directions[move][0];
             int newJ = currentNode->pos.j + directions[move][1];
-
-            tmp_array2[newI][newJ].parent = currentNode;
-            tmp_array2[newI][newJ].state = 1; 
+			
+			
+				tmp_array[newI][newJ].state = 1; 
+			
+            tmp_array[newI][newJ].parent = currentNode;
+            tmp_array[newI][newJ].state = 1; 
             currentNode = &tmp_array2[newI][newJ];
 
             pathArray[pathIndex++] = currentNode->pos;
+            pathArray[pathIndex + 1] = NULLPOINT;
         }
     }
 
-    for (int i = 0; i < pathIndex; i++) {
+    /*for (int i = 0; i < pathIndex; i++) {
         tmp_pathArray[i] = pathArray[i];
     }
     for (int i = 0; i < pathIndex; i++) {
         pathArray[i] = tmp_pathArray[i];
-    }
+    }*/
 }

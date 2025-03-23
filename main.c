@@ -80,6 +80,8 @@ int main()
 	
 	 
 	int modo = 0;
+	int tentativas;
+	int resolvido;
 	
 	while (modo != 6){
 	memcpy(tmp_maze, maze, sizeof(tmp_maze));
@@ -105,11 +107,17 @@ int main()
 	        printSolvedMaze(tmp_maze, rows, columns);
 	    }
 	}
-
+	tentativas = 0;
+	resolvido = 0;
+	
 	if (modo == 2) {
-	    while (1) {
-	        solveMazeRand(pathArr, array, rows, columns, 0, end); 
+	    while ((tentativas < 100000) && (resolvido == 0)) {
+	        solveMazeRand(pathArr, array, rows, columns, 0, end);
 	        if (pathArr[0].i == -1) {
+				tentativas++;
+		    }
+		    else { resolvido = 1; }
+	        /*if (pathArr[0].i == -1) {
 	            printf("Labirinto sem solução.\n");
 	            break;
 	        }
@@ -119,7 +127,7 @@ int main()
 	        if (tmp_maze[end.i][end.j].andou == 1) {
 	            printf("Labirinto resolvido!\n"); // adicionado devido à aleatoriedade
 	            break;
-	        }
+	        }*/
 	
 	        memcpy(tmp_maze, maze, sizeof(tmp_maze));
 	    }
