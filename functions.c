@@ -399,7 +399,6 @@ void solveMazeRand(point* pathArray, node array[MAXSIZE][MAXSIZE], int rows, int
                     tmp_array[newI][newJ].parent = &array[currentNode->pos.i][currentNode->pos.j];
                     currentNode = &tmp_array2[newI][newJ];
                     endFound = 1;
-                    printf("Achei");
                     break;
                 } else{
 					if ((tmp_array2[newI][newJ].state == 0) || (inimigosBool && (tmp_array2[newI][newJ].state == 5))) {
@@ -412,7 +411,6 @@ void solveMazeRand(point* pathArray, node array[MAXSIZE][MAXSIZE], int rows, int
 		if (currentNode->state == 4)
 			{
 				endFound = 1;
-				printf("Achei");
 			}
         else if (validMoveCount == 0) {
            
