@@ -17,8 +17,13 @@ Mas talvez o GEAAAAAAAANy compile normalmente já que é uma IDE.
 */
 
 
-int main()
+int main(int argc, char* argv[0])
 {
+	if (argc != 2)
+	{
+		printf("Modo de uso: ./main [nomedoarquivo]\n");
+		return 1;
+	}
 	srand(time(NULL)); // deixando o rand aleatório
 	//tamanho[i][j]
 	char rawMaze[MAXSIZE][MAXSIZE];
@@ -28,13 +33,10 @@ int main()
 	point end;						
 	
 	// Solicitar nome do arquivo ao usuário
-	char archiveName[50];
 	int rows, columns;
-	printf("Digite o nome do arquivo do labirinto:\n");
-	scanf("%s", archiveName);
 
 	// Ler o labirinto do arquivo
-	readArchive(rawMaze, &rows, &columns, archiveName);	// Tamanho dinamico
+	readArchive(rawMaze, &rows, &columns, argv[1]);	// Tamanho dinamico
 
 	// Traduzir de "char" para "tile" e definir start e end 
 	charToTile(rawMaze, maze, &start, &end, rows, columns);
@@ -80,86 +82,98 @@ int main()
 	
 	 
 	int modo = 0;
+	int modosec = 0;
 	int tentativas;
 	int resolvido;
 	
-	while (modo != 6){
+	while (modo != 4){
 	memcpy(tmp_maze, maze, sizeof(tmp_maze));
 	printf ("qual o modo?\n"); //da flush no terminal
 	printf ("Modo 1: faz o labirinto escolhido uma vez.\n");
 	printf ("Modo 2: faz o labirinto escolhido ate resolve-lo.\n");
-	printf ("Modo 3: Salva labirinto resolvido.\n");
-	printf ("Modo 4: faz o labirinto escolhido uma vez (estrategia inteligente).\n");
-	printf ("Modo 5: faz o labirinto escolhido ate resolve-lo (estrategia inteligente).\n");
-	printf ("Modo 6: Sair.\n");
-	if (!(scanf ("%i", &modo)) || ((modo > 6) || (modo < 0)))
+	printf ("Modo 3: Salva labirinto resolvido.\n");              // !!! MUDAR PRA NÃO RESOLVIDO !!!
+	printf ("Modo 4: sair\n");
+	if (!(scanf ("%i", &modo)) || ((modo > 4) || (modo < 0)))
 	{
-		printf("Utilize apenas numeros de 1 a 6.");
-		return 1;
+		printf("Utilize apenas numeros de 1 a 4!\n");
+		modo = 0;
+		continue;
 	}
 
 	if (modo == 1) {
-	    solveMazeRand(pathArr, array, rows, columns, 0, end);
-	    if (pathArr[0].i == -1) {
-	        printf("Labirinto sem solução.\n");
-	    } else {
-	        pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);
-	        printSolvedMaze(tmp_maze, rows, columns);
-	    }
-	}
+			printf("1- Modo inteligente\n2- Modo BURRO\n");
+			if (!(scanf ("%i", &modosec)) || ((modosec != 1) && (modosec != 2)))
+		{
+			printf("Utilize apenas 1 ou 2!\n");
+			return 1;
+		}
+		if (modosec == 2)
+		{
+			solveMazeRand(pathArr, array, rows, columns, 0, end);
+			if (pathArr[0].i == -1) 
+			{
+				printf("Labirinto sem solução.\n");
+			} 
+			else 
+			{
+				pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);
+				printSolvedMaze(tmp_maze, rows, columns);
+			}
+		}
+		else
+		{
+			int porcentWin = 10; // Resolve e imprime quando da vitoria
+			solveMaze(pathArr, array, rows, columns, 0 , end);
+			if (pathArr[0].i == -1)
+			{
+				printf("Labirinto sem solucao.\n");
+				return 0;
+			}
+			cleanerpath(pathArr, tmp_maze, porcentWin);
+			pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);
+			printSolvedMaze(tmp_maze, rows, columns);
+		}
+		}
+		
 	tentativas = 0;
 	resolvido = 0;
 	
 	if (modo == 2) {
-	    while ((tentativas < 100000) && (resolvido == 0)) {
-	        solveMazeRand(pathArr, array, rows, columns, 0, end);
-	        if (pathArr[0].i == -1) {
-				tentativas++;
-		    }
-		    else { resolvido = 1; }
-	        /*if (pathArr[0].i == -1) {
-	            printf("Labirinto sem solução.\n");
-	            break;
-	        }
-	        pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);
-	        printSolvedMaze(tmp_maze, rows, columns);
-	
-	        if (tmp_maze[end.i][end.j].andou == 1) {
-	            printf("Labirinto resolvido!\n"); // adicionado devido à aleatoriedade
-	            break;
-	        }*/
-	
-	        memcpy(tmp_maze, maze, sizeof(tmp_maze));
-	    }
+		printf("1- Modo inteligente\n2- Modo BURRO\n");
+			if (!(scanf ("%i", &modosec)) || ((modosec != 1) && (modosec != 2)))
+		{
+			printf("Utilize apenas 1 ou 2!\n");
+			return 1;
+		}
+		if (modosec == 2)
+		{
+			while ((tentativas < 100000) && (resolvido == 0)) 
+			{
+				solveMazeRand(pathArr, array, rows, columns, 0, end);
+				if (pathArr[0].i == -1) 
+				{
+					tentativas++;
+				}
+				
+				else { resolvido = 1; }
+				
+				memcpy(tmp_maze, maze, sizeof(tmp_maze));
+			}
+		}
+		else 
+		{
+			int porcentWin = 10; // Resolve e imprime quando da vitoria
+			solveMaze(pathArr, array, rows, columns, 0 , end);
+			if (pathArr[0].i == -1)
+			{
+				printf("Labirinto sem solucao.\n");
+				return 0;
+			}
+			cleanerpath(pathArr, tmp_maze, porcentWin);
+			pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);
+			printSolvedMaze(tmp_maze, rows, columns);
+		}
 	}
-		
-	if (modo == 4){
-	int porcentWin = 5; // resolve apenas uma vez
-	solveMaze(pathArr, array, rows, columns, 0 , end);
-	if (pathArr[0].i == -1)
-	{
-		printf("Labirinto sem solucao.\n");
-		return 0;
-	}
-	cleanerpath(pathArr, tmp_maze, porcentWin);
-	pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);
-	printSolvedMaze(tmp_maze, rows, columns);
-	
-	}
-	
-	if (modo == 5) {
-	int porcentWin = 10; // Resolve e imprime quando da vitoria
-	solveMaze(pathArr, array, rows, columns, 0 , end);
-	if (pathArr[0].i == -1)
-	{
-		printf("Labirinto sem solucao.\n");
-		return 0;
-	}
-	cleanerpath(pathArr, tmp_maze, porcentWin);
-	pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);
-	printSolvedMaze(tmp_maze, rows, columns);
-	}
-	
 	
 	if (modo == 3){
 	
