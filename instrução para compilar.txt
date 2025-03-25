@@ -1,1 +1,6 @@
 gcc main.c -o main
+
+arquivos de teste:
+teste1515
+teste1010
+teste22

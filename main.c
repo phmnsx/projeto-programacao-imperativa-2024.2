@@ -88,7 +88,7 @@ int main(int argc, char* argv[0])
 	
 	while (modo != 4){
 	memcpy(tmp_maze, maze, sizeof(tmp_maze));
-	printf ("qual o modo?\n"); //da flush no terminal
+	printf ("Selecione o modo desejado:\n"); //da flush no terminal
 	printf ("Modo 1: faz o labirinto escolhido uma vez.\n");
 	printf ("Modo 2: faz o labirinto escolhido ate resolve-lo.\n");
 	printf ("Modo 3: Salva labirinto resolvido.\n");              // !!! MUDAR PRA NÃO RESOLVIDO !!!
@@ -101,7 +101,7 @@ int main(int argc, char* argv[0])
 	}
 
 	if (modo == 1) {
-			printf("1- Modo inteligente\n2- Modo BURRO\n");
+			printf("1- Modo inteligente\n2- Modo normal\n");
 			if (!(scanf ("%i", &modosec)) || ((modosec != 1) && (modosec != 2)))
 		{
 			printf("Utilize apenas 1 ou 2!\n");
@@ -139,7 +139,7 @@ int main(int argc, char* argv[0])
 	resolvido = 0;
 	
 	if (modo == 2) {
-		printf("1- Modo inteligente\n2- Modo BURRO\n");
+		printf("1- Modo inteligente\n2- Modo normal\n");
 			if (!(scanf ("%i", &modosec)) || ((modosec != 1) && (modosec != 2)))
 		{
 			printf("Utilize apenas 1 ou 2!\n");
