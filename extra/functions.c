@@ -343,24 +343,27 @@ void saveSolvedMaze(tile maze[MAXSIZE][MAXSIZE], int rows, int columns, const ch
 }
 
 void solveMazeRand(point* pathArray, node array[MAXSIZE][MAXSIZE], int rows, int columns, int inimigosBool, point end) {
-    srand(time(NULL));
-    point NULLPOINT = {-1, -1};
-    //point tmp_pathArray[400];
-    node tmp_array[rows][columns];
-    node tmp_array2[rows][columns];
+    static int seeded = 0;
+    if (!seeded) {
+        srand(time(NULL));
+        seeded = 1;
+    }
 
+    point NULLPOINT = {-1, -1};
+    node tmp_array[rows][columns];
+    
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
             tmp_array[i][j] = array[i][j];
-            tmp_array2[i][j] = array[i][j];
         }
     }
 
     node* currentNode = NULL;
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
-            if (tmp_array2[i][j].state == 3) { 
-                currentNode = &tmp_array2[i][j];
+            if (tmp_array[i][j].state == 3) {
+                currentNode = &tmp_array[i][j];
+                pathArray[0] = currentNode->pos;
                 break;
             }
         }
@@ -373,17 +376,15 @@ void solveMazeRand(point* pathArray, node array[MAXSIZE][MAXSIZE], int rows, int
     }
 
     int directions[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-    int pathIndex = 0;
-    int maxSteps = rows * columns * 2; 
-	
+    int pathIndex = 1;
+    int maxSteps = rows * columns * 2;
+
     while (pathIndex < maxSteps) {
-        // Verifica se chegou ao fim
         if (currentNode->pos.i == end.i && currentNode->pos.j == end.j) {
-            pathArray[pathIndex] = currentNode->pos;
-            pathArray[pathIndex + 1] = NULLPOINT;
+            pathArray[pathIndex] = NULLPOINT;
             return;
         }
-	    
+
         int validMoves[4];
         int validMoveCount = 0;
 
@@ -392,20 +393,19 @@ void solveMazeRand(point* pathArray, node array[MAXSIZE][MAXSIZE], int rows, int
             int newJ = currentNode->pos.j + directions[k][1];
 
             if (newI >= 0 && newI < rows && newJ >= 0 && newJ < columns) {
-                if (tmp_array2[newI][newJ].state == 4) { 
+                if (tmp_array[newI][newJ].state == 4) {
                     pathArray[pathIndex] = (point){newI, newJ};
                     pathArray[pathIndex + 1] = NULLPOINT;
                     return;
                 }
-                if (tmp_array2[newI][newJ].state == 0 || (inimigosBool && tmp_array2[newI][newJ].state == 5)) {
+                if (tmp_array[newI][newJ].state == 0 || (inimigosBool && tmp_array[newI][newJ].state == 5)) {
                     validMoves[validMoveCount++] = k;
                 }
             }
         }
 
         if (validMoveCount == 0) {
-            pathArray[pathIndex] = currentNode->pos;
-            pathArray[pathIndex + 1] = NULLPOINT;
+            pathArray[pathIndex] = NULLPOINT;
             return;
         }
 
@@ -414,10 +414,11 @@ void solveMazeRand(point* pathArray, node array[MAXSIZE][MAXSIZE], int rows, int
         int newJ = currentNode->pos.j + directions[move][1];
 
         tmp_array[newI][newJ].parent = currentNode;
-        tmp_array[newI][newJ].state = 1;
+        tmp_array[newI][newJ].state = 1; 
         currentNode = &tmp_array[newI][newJ];
         pathArray[pathIndex++] = currentNode->pos;
     }
+
     pathArray[0] = NULLPOINT;
 }
     /*for (int i = 0; i < pathIndex; i++) {
