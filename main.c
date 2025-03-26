@@ -110,10 +110,12 @@ int main(int argc, char* argv[0])
 		if (modosec == 2)
 		{
 			solveMazeRand(pathArr, array, rows, columns, 0, end);
-			if (pathArr[0].i == -1) 
+			if (pathArr[0].i == -1)
 			{
-				printf("Labirinto sem solução.\n");
-			} 
+			    printf("O personagem se perdeu...\n");
+			    pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);
+			    printSolvedMaze(tmp_maze, rows, columns);
+			}
 			else 
 			{
 				pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);
@@ -145,20 +147,24 @@ int main(int argc, char* argv[0])
 			printf("Utilize apenas 1 ou 2!\n");
 			return 1;
 		}
-		if (modosec == 2)
-		{
-			while ((tentativas < 100000) && (resolvido == 0)) 
-			{
-				solveMazeRand(pathArr, array, rows, columns, 0, end);
-				if (pathArr[0].i == -1) 
-				{
-					tentativas++;
-				}
-				
-				else { resolvido = 1; }
-				
-				memcpy(tmp_maze, maze, sizeof(tmp_maze));
+		if (modosec == 2) { 
+		    int maxTentativas = 1000; 
+		    int tentativas = 0;
+		    int resolvido = 0;
+		
+		    while (tentativas < maxTentativas && !resolvido) {
+			solveMazeRand(pathArr, array, rows, columns, 0, end);
+			if (pathArr[0].i != -1) {
+			    resolvido = 1;
+			    pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);
+			    printSolvedMaze(tmp_maze, rows, columns);
 			}
+			tentativas++;
+		    }
+		
+		    if (!resolvido) {
+			printf("Labirinto sem solução após %d tentativas.\n", maxTentativas);
+		    }
 		}
 		else 
 		{
