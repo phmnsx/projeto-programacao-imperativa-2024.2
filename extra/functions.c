@@ -190,7 +190,7 @@ void charToTile(char maze[MAXSIZE][MAXSIZE], tile parte[MAXSIZE][MAXSIZE], point
 
 
 void pathTileChar(point path[400], tile parte[MAXSIZE][MAXSIZE], char maze[MAXSIZE][MAXSIZE], int rows, int columns) {
-    int x, y, p;
+    int x, y, p, xf, yf;
 
     for (p = 0; p < 400; p++) {
         if (path[p].i != -1 && path[p].j != -1) {
@@ -212,9 +212,12 @@ void pathTileChar(point path[400], tile parte[MAXSIZE][MAXSIZE], char maze[MAXSI
         } else break;  
     }
 		p= p-1;
-		if (parte[path[p].i][path[p].j].vitoria != 1 && parte[path[p].i][path[p].j].morreu != 1){ // Detecta se o personagem se perdeu
-			parte[path[p].i][path[p].j].perdeu = 1;
-			parte[path[p].i][path[p].j].andou =0;
+		xf = path[p].i;
+		yf = path[p].j;
+		
+		if (parte[xf][yf].vitoria != 1 && parte[xf][yf].morreu != 1){ // Detecta se o personagem se perdeu
+			parte[xf][yf].perdeu = 1;
+			parte[xf][yf].andou =0;
 			
 		}
 
@@ -246,7 +249,6 @@ void cleanerpath(point path[400], tile parte[MAXSIZE][MAXSIZE], int porcentWin){
 			
 			if (porcentWin > rand() % 9){ //ganha a luta
 				parte[x][y].matou = 1;
-				parte[x][y].morreu = 0;
 				
 				if (porcentWin <= 9){
 					porcentWin++;
@@ -258,7 +260,8 @@ void cleanerpath(point path[400], tile parte[MAXSIZE][MAXSIZE], int porcentWin){
 				path[p+1].j = -1;
 				break;
 			}	
-
+		parte[x][y].inimigo = 0;
+		
 		}
 	}	
 }
