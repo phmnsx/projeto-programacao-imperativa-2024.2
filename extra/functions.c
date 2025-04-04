@@ -345,7 +345,8 @@ void saveSolvedMaze(tile maze[MAXSIZE][MAXSIZE], int rows, int columns, const ch
     printf("Labirinto resolvido salvo no arquivo %s.\n", filename);
 }
 
-void solveMazeRand(point pathArray[400], tile maze[MAXSIZE][MAXSIZE], int rows, int columns, int inimigosBool, point end) {
+int solveMazeRand(point* pathArray, tile maze[MAXSIZE][MAXSIZE], int rows, int columns, int inimigosBool, point end, int tentativa) {
+	srand(time(NULL) + tentativa); // deixando o rand aleatório
     point NULLPOINT = {-1, -1};
     point arraySec[4];       
     point arrayCaminhavel[4]; 
@@ -356,7 +357,8 @@ void solveMazeRand(point pathArray[400], tile maze[MAXSIZE][MAXSIZE], int rows, 
     for (i = 0; i < rows; i++) {
         for (j = 0; j < columns; j++) {
             if (maze[i][j].inicio == 1) {
-                pathArray[p] = (point){i, j}; 
+                pathArray[p].i = i;
+                pathArray[p].j = j;
                 p++;
                 break;
             }
@@ -366,7 +368,7 @@ void solveMazeRand(point pathArray[400], tile maze[MAXSIZE][MAXSIZE], int rows, 
 
     if (p == 0) { 
         pathArray[0] = NULLPOINT;
-        return;
+        return 0;
     }
 
     while (p < 400) {
@@ -374,24 +376,32 @@ void solveMazeRand(point pathArray[400], tile maze[MAXSIZE][MAXSIZE], int rows, 
         int ultimoy = pathArray[p-1].j;
 
         if (maze[ultimox][ultimoy].saida == 1) {
-            break;
+			pathArray[p] = NULLPOINT;
+            return 1;
         }
 
-        arraySec[0] = (point){ultimox + 1, ultimoy}; 
-        arraySec[1] = (point){ultimox - 1, ultimoy}; 
-        arraySec[2] = (point){ultimox, ultimoy + 1};
-        arraySec[3] = (point){ultimox, ultimoy - 1};
+        arraySec[0].i = ultimox + 1;
+        arraySec[0].j = ultimoy;
+        
+        arraySec[1].i = ultimox - 1;
+        arraySec[1].j = ultimoy;
+        
+        arraySec[2].i = ultimox;
+        arraySec[2].j = ultimoy + 1; 
+        
+        arraySec[3].i = ultimox;
+        arraySec[3].j = ultimoy - 1;
 
         cont = 0;
         for (int n = 0; n < 4; n++) {
 
-            if (arraySec[n].i >= 0 && arraySec[n].i < rows &&
-                arraySec[n].j >= 0 && arraySec[n].j < columns &&
-                maze[arraySec[n].i][arraySec[n].j].parede != 1) {
+            if ((arraySec[n].i >= 0) && (arraySec[n].i < rows) &&
+                (arraySec[n].j >= 0) && (arraySec[n].j < columns) &&
+                (maze[arraySec[n].i][arraySec[n].j].parede != 1) && (maze[arraySec[n].i][arraySec[n].j].andou != 1)) {
 
                 int passou = 0;
                 for (int k = 0; k < p; k++) {
-                    if (pathArray[k].i == arraySec[n].i && pathArray[k].j == arraySec[n].j) {
+                    if ((pathArray[k].i == arraySec[n].i) && (pathArray[k].j == arraySec[n].j)) { //verifica se ele nao andou (?)
                         passou = 1;
                         break;
                     }
@@ -404,22 +414,22 @@ void solveMazeRand(point pathArray[400], tile maze[MAXSIZE][MAXSIZE], int rows, 
         }
 
         if (cont > 0) {
-            int escolha = rand() % cont; 
+            int escolha = rand() % cont;
             pathArray[p] = arrayCaminhavel[escolha];
             p++;
         } 
 
-        else if (p > 1) {
+        /*else if (p > 1) {
             p--; 
-        } 
+        } */
     
         else {
             pathArray[p] = NULLPOINT;
-            return;
+            return 0;
         }
     }
 
-    pathArray[p] = NULLPOINT;
+  return 0;
 }
     /*for (int i = 0; i < pathIndex; i++) {
         tmp_pathArray[i] = pathArray[i];

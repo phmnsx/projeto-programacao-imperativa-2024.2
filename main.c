@@ -24,7 +24,6 @@ int main(int argc, char* argv[0])
 		printf("Modo de uso: ./main [nomedoarquivo]\n");
 		return 1;
 	}
-	srand(time(NULL)); // deixando o rand aleatório
 	//tamanho[i][j]
 	char rawMaze[MAXSIZE][MAXSIZE];
 	tile maze[MAXSIZE][MAXSIZE];
@@ -84,7 +83,6 @@ int main(int argc, char* argv[0])
 	int modo = 0;
 	int modosec = 0;
 	int tentativas;
-	int resolvido;
 	
 	while (modo != 4){
 	memcpy(tmp_maze, maze, sizeof(tmp_maze));
@@ -109,7 +107,7 @@ int main(int argc, char* argv[0])
 		}
 		if (modosec == 2)
 		{
-			solveMazeRand(pathArr, array, rows, columns, 0, end);
+			solveMazeRand(pathArr, maze, rows, columns, 0, end, 0);
 			if (pathArr[0].i == -1)
 			{
 			    printf("O personagem se perdeu...\n");
@@ -136,9 +134,6 @@ int main(int argc, char* argv[0])
 			printSolvedMaze(tmp_maze, rows, columns);
 		}
 		}
-		
-	tentativas = 0;
-	resolvido = 0;
 	
 	if (modo == 2) {
 		printf("1- Modo inteligente\n2- Modo normal\n");
@@ -148,23 +143,23 @@ int main(int argc, char* argv[0])
 			return 1;
 		}
 		if (modosec == 2) { 
+			tentativas = 0;
 		    int maxTentativas = 1000; 
-		    int tentativas = 0;
-		    int resolvido = 0;
 		
-		    while (tentativas < maxTentativas && !resolvido) {
-			solveMazeRand(pathArr, array, rows, columns, 0, end);
-			if (pathArr[0].i != -1) {
-			    resolvido = 1;
-			    pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);
-			    printSolvedMaze(tmp_maze, rows, columns);
+		    for (int i = 0; i < maxTentativas; i++){
+			 if (solveMazeRand(pathArr, maze, rows, columns, 0, end, i * rand()))
+			 {
+				 break;
+			 }
+			 tentativas++;
 			}
-			tentativas++;
-		    }
+			
+			pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);
+			printSolvedMaze(tmp_maze, rows, columns);
+			printf("%i tentativas\n", tentativas);
+
+		    
 		
-		    if (!resolvido) {
-			printf("Labirinto sem solução após %d tentativas.\n", maxTentativas);
-		    }
 		}
 		else 
 		{
