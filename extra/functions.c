@@ -345,84 +345,81 @@ void saveSolvedMaze(tile maze[MAXSIZE][MAXSIZE], int rows, int columns, const ch
     printf("Labirinto resolvido salvo no arquivo %s.\n", filename);
 }
 
-void solveMazeRand(point* pathArray, node array[MAXSIZE][MAXSIZE], int rows, int columns, int inimigosBool, point end) {
-    static int seeded = 0;
-    if (!seeded) {
-        srand(time(NULL));
-        seeded = 1;
-    }
-
+void solveMazeRand(point pathArray[400], tile maze[MAXSIZE][MAXSIZE], int rows, int columns, int inimigosBool, point end) {
     point NULLPOINT = {-1, -1};
-    node tmp_array[rows][columns];
-    
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < columns; j++) {
-            tmp_array[i][j] = array[i][j];
-        }
-    }
+    point arraySec[4];       
+    point arrayCaminhavel[4]; 
+    int cont = 0;
+    int p = 0;
+    int i, j;
 
-    node* currentNode = NULL;
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < columns; j++) {
-            if (tmp_array[i][j].state == 3) {
-                currentNode = &tmp_array[i][j];
-                pathArray[0] = currentNode->pos;
+    for (i = 0; i < rows; i++) {
+        for (j = 0; j < columns; j++) {
+            if (maze[i][j].inicio == 1) {
+                pathArray[p] = (point){i, j}; 
+                p++;
                 break;
             }
         }
-        if (currentNode != NULL) break;
+        if (p > 0) break; 
     }
 
-    if (currentNode == NULL) {
+    if (p == 0) { 
         pathArray[0] = NULLPOINT;
         return;
     }
 
-    int directions[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-    int pathIndex = 1;
-    int maxSteps = rows * columns * 2;
+    while (p < 400) {
+        int ultimox = pathArray[p-1].i;
+        int ultimoy = pathArray[p-1].j;
 
-    while (pathIndex < maxSteps) {
-        if (currentNode->pos.i == end.i && currentNode->pos.j == end.j) {
-            pathArray[pathIndex] = NULLPOINT;
-            return;
+        if (maze[ultimox][ultimoy].saida == 1) {
+            break;
         }
 
-        int validMoves[4];
-        int validMoveCount = 0;
+        arraySec[0] = (point){ultimox + 1, ultimoy}; 
+        arraySec[1] = (point){ultimox - 1, ultimoy}; 
+        arraySec[2] = (point){ultimox, ultimoy + 1};
+        arraySec[3] = (point){ultimox, ultimoy - 1};
 
-        for (int k = 0; k < 4; k++) {
-            int newI = currentNode->pos.i + directions[k][0];
-            int newJ = currentNode->pos.j + directions[k][1];
+        cont = 0;
+        for (int n = 0; n < 4; n++) {
 
-            if (newI >= 0 && newI < rows && newJ >= 0 && newJ < columns) {
-                if (tmp_array[newI][newJ].state == 4) {
-                    pathArray[pathIndex] = (point){newI, newJ};
-                    pathArray[pathIndex + 1] = NULLPOINT;
-                    return;
+            if (arraySec[n].i >= 0 && arraySec[n].i < rows &&
+                arraySec[n].j >= 0 && arraySec[n].j < columns &&
+                maze[arraySec[n].i][arraySec[n].j].parede != 1) {
+
+                int passou = 0;
+                for (int k = 0; k < p; k++) {
+                    if (pathArray[k].i == arraySec[n].i && pathArray[k].j == arraySec[n].j) {
+                        passou = 1;
+                        break;
+                    }
                 }
-                if (tmp_array[newI][newJ].state == 0 || (inimigosBool && tmp_array[newI][newJ].state == 5)) {
-                    validMoves[validMoveCount++] = k;
+
+                if (passou == 0) {
+                    arrayCaminhavel[cont++] = arraySec[n]; 
                 }
             }
         }
 
-        if (validMoveCount == 0) {
-            pathArray[pathIndex] = NULLPOINT;
+        if (cont > 0) {
+            int escolha = rand() % cont; 
+            pathArray[p] = arrayCaminhavel[escolha];
+            p++;
+        } 
+
+        else if (p > 1) {
+            p--; 
+        } 
+    
+        else {
+            pathArray[p] = NULLPOINT;
             return;
         }
-
-        int move = validMoves[rand() % validMoveCount];
-        int newI = currentNode->pos.i + directions[move][0];
-        int newJ = currentNode->pos.j + directions[move][1];
-
-        tmp_array[newI][newJ].parent = currentNode;
-        tmp_array[newI][newJ].state = 1; 
-        currentNode = &tmp_array[newI][newJ];
-        pathArray[pathIndex++] = currentNode->pos;
     }
 
-    pathArray[0] = NULLPOINT;
+    pathArray[p] = NULLPOINT;
 }
     /*for (int i = 0; i < pathIndex; i++) {
         tmp_pathArray[i] = pathArray[i];
