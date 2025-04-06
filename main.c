@@ -83,6 +83,7 @@ int main(int argc, char* argv[0])
 	int modo = 0;
 	int modosec = 0;
 	int tentativas;
+	int porcentWin;
 	
 	while (modo != 4){
 	memcpy(tmp_maze, maze, sizeof(tmp_maze));
@@ -98,7 +99,8 @@ int main(int argc, char* argv[0])
 		continue;
 	}
 
-	if (modo == 1) {
+	if (modo == 1) { // Resolve e imprime a primeira vez
+		porcentWin = 05;
 			printf("1- Modo inteligente\n2- Modo normal\n");
 			if (!(scanf ("%i", &modosec)) || ((modosec != 1) && (modosec != 2)))
 		{
@@ -111,19 +113,20 @@ int main(int argc, char* argv[0])
 			if (pathArr[0].i == -1)
 			{
 			    printf("O personagem se perdeu...\n");
+			    cleanerpath(pathArr, tmp_maze, porcentWin);
 			    pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);
 			    printSolvedMaze(tmp_maze, rows, columns);
 			}
 			else 
 			{
+				cleanerpath(pathArr, tmp_maze, porcentWin);
 				pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);
 				printSolvedMaze(tmp_maze, rows, columns);
 			}
 		}
 		else
 		{
-			int porcentWin = 10; // Resolve e imprime quando da vitoria
-			solveMaze(pathArr, array, rows, columns, 0 , end);
+			solveMaze(pathArr, array, rows, columns, 0 , end); 
 			if (pathArr[0].i == -1)
 			{
 				printf("Labirinto sem solucao.\n");
@@ -135,7 +138,8 @@ int main(int argc, char* argv[0])
 		}
 		}
 	
-	if (modo == 2) {
+	if (modo == 2) {// Resolve e imprime quando da vitoria
+		porcentWin = 10;// Para chegar mais rapido na vitória
 		printf("1- Modo inteligente\n2- Modo normal\n");
 			if (!(scanf ("%i", &modosec)) || ((modosec != 1) && (modosec != 2)))
 		{
@@ -153,7 +157,7 @@ int main(int argc, char* argv[0])
 			 }
 			 tentativas++;
 			}
-			
+			cleanerpath(pathArr, tmp_maze, porcentWin);
 			pathTileChar(pathArr, tmp_maze, rawMaze, rows, columns);
 			printSolvedMaze(tmp_maze, rows, columns);
 			printf("%i tentativas\n", tentativas);
@@ -163,7 +167,6 @@ int main(int argc, char* argv[0])
 		}
 		else 
 		{
-			int porcentWin = 10; // Resolve e imprime quando da vitoria
 			solveMaze(pathArr, array, rows, columns, 0 , end);
 			if (pathArr[0].i == -1)
 			{
