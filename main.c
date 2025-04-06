@@ -181,7 +181,7 @@ int main(int argc, char* argv[0])
 	
 	if (modo == 3){
 	
-	int porcentWin = 10;
+	porcentWin = 10;
 	solveMaze(pathArr, array, rows, columns, 0 , end);
 	if (pathArr[0].i == -1)
 	{
