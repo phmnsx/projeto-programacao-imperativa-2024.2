@@ -38,47 +38,44 @@ void solveMaze(point* pathArray, node (*array)[], int rows, int columns, int ini
 	point tmp_pathArray[400];
 	node tmp_array[rows][columns];
 	node tmp_array2[rows][columns];
-	for (int i = 0; i < rows; i++)
-	{
-		for (int j = 0; j < columns ; j++)
-		{
-			tmp_array[i][j] = makeNode(NULL, -1, -1);
-			tmp_array2[i][j] = makeNode(NULL, -1, -1);
-			
-		}
-	}
+	
+	//transforma as arrays temporarias igual a array de entrada
 	memcpy(tmp_array, array, sizeof(tmp_array));
 	memcpy(tmp_array2, array, sizeof(tmp_array2));
 	
+	//inicializa endNode
 	node endNode = makeNode(NULL, -1, -1);
 	int flag;
 	 
-	while(endNode.parent == NULL)
+	while(endNode.parent == NULL) //enquanto endNode não foi encontrada
 	{
 		flag = 0;
 		for (int i = 0; i < rows; i++)
 		{
-			for (int j = 0 ; j < columns; j++)
+			for (int j = 0 ; j < columns; j++) //para todo "i" e "j"
 			{
 				if ((tmp_array2[i][j].state == 3) || (tmp_array2[i][j].state == 1) || (tmp_array2[i][j].state == 6)) // Se for inicio ou andado ou inimigo andado
 				{
-					for (int k = -1; k < 2 ; k = k + 2)
+					for (int k = -1; k < 2 ; k = k + 2) //olha nas posições "-1" e "1" relativas a j e k, ou seja, olha nas quatro posições adjacentes à node atual
 					{
+						
 						if (((i + k) >= 0) && ((i + k) < rows))
 						{
-							if (tmp_array2[i + k][j].state == 4)
+							if (tmp_array2[i + k][j].state == 4) //caso seja o final
 							{
-								tmp_array2[i + k][j].parent = &tmp_array2[i][j];
+								tmp_array2[i + k][j].parent = &tmp_array2[i][j]; //parent do final é a node atual
 								endNode = tmp_array2[i + k][j];
 
 							}
-							else if ((tmp_array2[i + k][j].state == 0) || (inimigosBool && (tmp_array2[i + k][j].state == 5))) // Se for andável
+							else if ((tmp_array2[i + k][j].state == 0) || (inimigosBool && (tmp_array2[i + k][j].state == 5))) // caso contrario, se for andável
 							{
 								tmp_array[i + k][j].state = 1;
-								tmp_array[i + k][j].parent = &tmp_array2[i][j];
+								tmp_array[i + k][j].parent = &tmp_array2[i][j]; //parent dessa node é a node atual
 								flag++;	
 							}
 						}
+						
+						
 						if (((j + k) >= 0) && ((j + k) < columns))
 						{
 							if (tmp_array2[i][j + k].state == 4)
@@ -97,12 +94,14 @@ void solveMaze(point* pathArray, node (*array)[], int rows, int columns, int ini
 				}
 			}
 		}
-		memcpy(tmp_array2, tmp_array, sizeof(tmp_array)); // atualiza array pra ser tmp_array
+		memcpy(tmp_array2, tmp_array, sizeof(tmp_array)); // atualiza tmp_array2 pra ser tmp_array
+														  // são utilizadas duas arrays porque se uma array fosse lida e modificada ao mesmo tempo ocorreriam coisas 
+														  // inesperadas e/ou inadequadas
 		
-		if (inimigosBool)
+		if (inimigosBool) //se não está considerando inimigos como paredes
 		{
-			inimigosBool = 0;
-			if (flag == 0)
+			inimigosBool = 0; //desconsidere como paredes
+			if (flag == 0)    // porem, se desconsidera inimigos como paredes e não achou caminho, o labirinto não possui solução
 			{
 				pathArray[0] = NULLPOINT;
 				return;
@@ -115,7 +114,7 @@ void solveMaze(point* pathArray, node (*array)[], int rows, int columns, int ini
 	}
 	int size;
 	
-	for(size = 0; size < 400; size++)
+	for(size = 0; size < 400; size++) //coloca os pontos, do fim ao inicio, na array, percorrendo os "parents"
 	{
 		pathArray[size] = getPoint(endNode, size);
 		if ((pathArray[size].i == NULLPOINT.i) && (pathArray[size].j == NULLPOINT.j))
@@ -123,7 +122,7 @@ void solveMaze(point* pathArray, node (*array)[], int rows, int columns, int ini
 			break;
 		}
 	}
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < size; i++) //inverte a array
 	{
 		tmp_pathArray[i] = pathArray[size - i - 1];
 	}
@@ -133,8 +132,8 @@ void solveMaze(point* pathArray, node (*array)[], int rows, int columns, int ini
 	}
 }
 
-point getPoint(node currentNode, int ger) {
-    point NULLPOINT = {-1, -1};
+point getPoint(node currentNode, int ger) { //currentNode representa o node atual em "analise" e "ger" quantos mais faltam para chegar no "destino"
+    point NULLPOINT = {-1, -1};				//a função utiliza de recursão pra encontrar a node com "ger" distância da ultima node.
     if (currentNode.parent == NULL) {
         return NULLPOINT;
     }
@@ -220,19 +219,6 @@ void pathTileChar(point path[400], tile parte[MAXSIZE][MAXSIZE], char maze[MAXSI
 			parte[xf][yf].andou =0;
 			
 		}
-
-   /* for (int a = 0; a < rows; a++) {
-        for (int b = 0; b < columns; b++) {
-            if (parte[a][b].morreu == 1) {
-                printf("+");  // TODO ver qual eh o simbolo de perdeu...
-            } else if (parte[a][b].matou == 1) {
-                printf("!");
-            } else {
-                printf("%c", maze[a][b]);
-            }
-        }
-        printf("\n");
-    } */
 }
 
  
@@ -275,34 +261,41 @@ void printSolvedMaze(tile maze[MAXSIZE][MAXSIZE], int rows, int columns) {
 		{
 			if (maze[i][j].morreu)
 			{
-				flag ++;
+				flag = 1;
 			}
 			
 			if (maze[i][j].vitoria)
 			{
-				flag --;
+				flag = -1;
+			}
+			if (maze[i][j].perdeu)
+			{
+				flag = 2;
 			}
 	}
 }
-	if (flag > 0)
+	if (flag == 1)
 	{
 		printf("\nPersonagem Morreu:\n");
 	}
-    else if (flag < 0)
+	else if (flag == 2)
+	{
+		printf("\nO personagem se perdeu:\n");
+	}
+	else if ( flag == 0)
+	{
+		  printf ("\nLabirinto escolhido:\n");
+	}
+	else
     {
 		printf("\nLabirinto resolvido:\n");
 		
 	}
-	 else if ( flag == 0)
-	 {
-		  printf ("\nLabirinto escolhido:\n");
-	 }
 	
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
             if (maze[i][j].inicio) printf("@ ");
             else if (maze[i][j].parede) printf("# ");
-      
             else if (maze[i][j].saida) printf("$ ");
             else if (maze[i][j].vitoria) printf("V ");
             else if (maze[i][j].matou) printf("! ");
@@ -419,10 +412,6 @@ int solveMazeRand(point* pathArray, tile maze[MAXSIZE][MAXSIZE], int rows, int c
             p++;
         } 
 
-        /*else if (p > 1) {
-            p--; 
-        } */
-    
         else {
             pathArray[p] = NULLPOINT;
             return 0;
@@ -431,9 +420,3 @@ int solveMazeRand(point* pathArray, tile maze[MAXSIZE][MAXSIZE], int rows, int c
 
   return 0;
 }
-    /*for (int i = 0; i < pathIndex; i++) {
-        tmp_pathArray[i] = pathArray[i];
-    }
-    for (int i = 0; i < pathIndex; i++) {
-        pathArray[i] = tmp_pathArray[i];
-    }*/
